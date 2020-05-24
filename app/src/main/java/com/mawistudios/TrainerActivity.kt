@@ -5,55 +5,31 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.mawistudios.app.log
-import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
 import com.mawistudios.trainer.R
 import kotlinx.coroutines.*
-import java.time.Duration
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
 class TrainerActivity : AppCompatActivity() {
     private lateinit var trainingChart: LineChart
-    private lateinit var trainingProgram: TrainingProgram
-    private lateinit var session: Session
+    private lateinit var viewModel: TrainerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        trainingProgram = getTrainingProgram()
+        viewModel = TrainerViewModel()
         setupUI()
-        var newSessionId = SessionRepo.add(Session())
-        session = SessionRepo.get(newSessionId)
-    }
-
-    private fun getTrainingProgram(): TrainingProgram {
-        val zones = getUserHearthRateZones()
-        val targetCadence = Zone(70.0, 80.0)
-
-        val intervals = (zones.take(6) + zones.take(6).reversed()).map {
-            TrainingInterval(
-                duration = Duration.ofSeconds(60).toMillis(),
-                targetCadence = targetCadence,
-                targetHearthRate = it
-            )
-        }
-
-        return TrainingProgram(intervals = intervals)
     }
 
     private fun setupUI() {
         setContentView(R.layout.activity_trainer)
         setupGraph()
     }
-
 
     private fun buildSet(
         entries: ArrayList<Entry>,
@@ -74,22 +50,30 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUserHearthRateZones(): List<Zone> {
-        val threshold = 164.0
-        return listOf(
-            Zone(0.0 * threshold, 0.81 * threshold, "1 Recovery", getColor(R.color.hr1)),
-            Zone(0.81 * threshold, 0.89 * threshold, "2 Aerobic", getColor(R.color.hr2)),
-            Zone(0.89 * threshold, 0.93 * threshold, "3 Tempo", getColor(R.color.hr3)),
-            Zone(0.93 * threshold, 0.99 * threshold, "4 SubThreshold", getColor(R.color.hr4)),
-            Zone(0.99 * threshold, 1.02 * threshold, "5A SubThreshold", getColor(R.color.hr5)),
-            Zone(1.02 * threshold, 1.06 * threshold, "5B Aerobic Capacity", getColor(R.color.hr6)),
-            Zone(1.06 * threshold, 1.3 * threshold, "5C Anaerobic Capacity", getColor(R.color.hr7))
-        )
+    private fun Zone.color(): Int = when (this.index) {
+        0 -> Color.BLACK
+        1 -> getColor(R.color.hr1)
+        2 -> getColor(R.color.hr2)
+        3 -> getColor(R.color.hr3)
+        4 -> getColor(R.color.hr4)
+        5 -> getColor(R.color.hr5)
+        6 -> getColor(R.color.hr6)
+        7 -> getColor(R.color.hr7)
+        else -> Color.BLACK
     }
 
+    private fun trainingProgramChartSet(): List<LineDataSet> {
+        return viewModel.trainingProgramSets().map {
+            val userHearthRate = viewModel.getUserHearthRateZones().first { z ->
+                z.matches(it.first().y.toDouble())
+            }
+            return@map buildSet(it, alpha = 90, col = userHearthRate.color())
+        }
+    }
 
     private fun setupGraph() {
-        val sets = trainingProgramSets()
+        val sets = trainingProgramChartSet()
+
         this.trainingChart = findViewById<LineChart>(R.id.training_chart).apply {
             legend.isEnabled = false
             xAxis.isEnabled = false
@@ -102,35 +86,16 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-    private fun trainingProgramSets(): List<LineDataSet> {
-        return trainingProgram
-            .toGraphFormat()
-            .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
-            .map {
-                val userHearthRate = getUserHearthRateZones().first { z ->
-                    z.matches(it.first().y.toDouble())
-                }
-                return@map buildSet(it, alpha = 90, col = userHearthRate.color)
-            }
-    }
-
     private val trainingSessionObserver = object : ITrainingSessionObserver {
         override fun onTrainingDataChanged() {
-            val hearthRateData = SensorDataRepo.currentHearthRate()
-
-            hearthRateData?.let { hrData ->
-                if (!session.hasStarted()) {
-                    session = SessionRepo.update(session.id) { s ->
-                        s.startTime = hrData.time
-                    }
-                }
-            }
-
+            var session = viewModel.getSession()
+            val hearthRateData = viewModel.currentHearthRate()
             val bpm = hearthRateData?.dataPoint?.roundToInt()?.toString() ?: "-"
-            val kmh = SensorDataRepo.currentSpeed()?.dataPoint?.roundToInt()?.toString() ?: "-"
-            val cadence =
-                SensorDataRepo.currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
-            //val currentDistance = SensorDataRepo.currentDistance()
+            val kmh = viewModel.currentSpeed()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            val cadence = viewModel.currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            //val currentDistance = viewModel.currentDistance()
+
+            viewModel.maybeUpdateStartTime(hearthRateData)
 
             GlobalScope.launch(Dispatchers.Main) {
                 findViewById<TextView>(R.id.hr_text).text = bpm
@@ -138,19 +103,9 @@ class TrainerActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.rpm_text).text = cadence
             }
 
-            if (session.hasStarted()) {
+            if (viewModel.hasSessionStarted()) {
                 hearthRateData?.let {
-                    val passedIntervals = trainingProgram
-                        .toGraphFormat()
-                        .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
-                        .filter { isIntervalInThePast(hearthRateData, it) }
-
-                    var currentDuration = currentDuration(hearthRateData.time).seconds
-                    passedIntervals.last()[1].x = currentDuration.toFloat()
-                    passedIntervals.last()[2].x = currentDuration.toFloat()
-                    passedIntervals.last()[2].y = passedIntervals.last()[1].y
-
-                    val userInterval = ArrayList(passedIntervals.flatMap { i -> i.map { j -> j } })
+                    var userInterval = viewModel.getPassedInterval(hearthRateData)
 
                     val userSet = buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
                         isHighlightEnabled = true
@@ -159,13 +114,12 @@ class TrainerActivity : AppCompatActivity() {
                         highlightLineWidth = 4f
                     }
 
-                    val sets = trainingProgramSets().toMutableList()
+                    val sets = trainingProgramChartSet().toMutableList()
                     sets.add(userSet)
-
 
                     this@TrainerActivity.trainingChart.data = LineData(sets.toList())
                     this@TrainerActivity.trainingChart.highlightValue(
-                        currentDuration.toFloat(),
+                        viewModel.currentDuration(hearthRateData.time).seconds.toFloat(),
                         sets.indices.last
                     )
                     this@TrainerActivity.trainingChart.notifyDataSetChanged()
@@ -183,20 +137,6 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun currentDuration(currentTime: Date): Duration {
-        return Duration.ofMillis(currentTime.time - session.startTime!!.time)
-    }
-
-    private fun isIntervalInThePast(
-        hearthRateData: SensorData,
-        it: ArrayList<Entry>
-    ): Boolean {
-        val intervalStart = it[0].x
-        var currentDuration = currentDuration(hearthRateData.time).seconds
-        return currentDuration >= intervalStart
-    }
-
     override fun onStart() {
         super.onStart()
         TrainingSessionObservable.register(trainingSessionObserver)
@@ -206,6 +146,4 @@ class TrainerActivity : AppCompatActivity() {
         super.onStop()
         TrainingSessionObservable.unRegister(trainingSessionObserver)
     }
-
-
 }
