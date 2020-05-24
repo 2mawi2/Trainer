@@ -10,21 +10,32 @@ fun TrainingProgram.toGraphFormat(): List<List<Pair<Float, Float>>> {
     var totalDuration: Duration = Duration.ZERO
     val graphDataPoints: MutableList<List<Pair<Float, Float>>> = mutableListOf()
 
-    this.intervals.forEach {
+
+    this.intervals.indices.map { i ->
         val intervalData: ArrayList<Pair<Float, Float>> = arrayListOf()
         intervalData.add(
             Pair(
-                totalDuration.toMinutes().toFloat(),
-                it.targetHearthRate.max.toFloat()
+                totalDuration.seconds.toFloat(),
+                intervals[i].targetHearthRate.max.toFloat()
             )
         )
-        totalDuration = totalDuration.plusMillis(it.duration)
+        totalDuration = totalDuration.plusMillis(intervals[i].duration)
         intervalData.add(
             Pair(
-                totalDuration.toMinutes().toFloat(),
-                it.targetHearthRate.max.toFloat()
+                totalDuration.seconds.toFloat(),
+                intervals[i].targetHearthRate.max.toFloat()
             )
         )
+
+        if (intervals.indices.contains(i + 1)) {
+            intervalData.add(
+                Pair(
+                    totalDuration.seconds.toFloat(),
+                    intervals[i + 1].targetHearthRate.max.toFloat()
+                )
+            )
+        }
+
         graphDataPoints.add(intervalData)
     }
 

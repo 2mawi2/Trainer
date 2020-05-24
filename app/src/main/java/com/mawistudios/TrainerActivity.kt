@@ -38,9 +38,9 @@ class TrainerActivity : AppCompatActivity() {
         val zones = getUserHearthRateZones()
         val targetCadence = Zone(70.0, 80.0)
 
-        val intervals = zones.take(6).map {
+        val intervals = (zones.take(6) + zones.take(6).reversed()).map {
             TrainingInterval(
-                duration = Duration.ofMinutes(10).toMillis(),
+                duration = Duration.ofSeconds(60).toMillis(),
                 targetCadence = targetCadence,
                 targetHearthRate = it
             )
@@ -62,16 +62,14 @@ class TrainerActivity : AppCompatActivity() {
     ): LineDataSet {
         return LineDataSet(entries, "Training Data").apply {
             setDrawIcons(false)
-            color = Color.WHITE
+            color = Color.DKGRAY
             lineWidth = 2f
-            circleRadius = 1f
-            setCircleColor(Color.WHITE)
             setDrawCircleHole(false)
+            setDrawCircles(false)
             setDrawFilled(true)
             formLineWidth = 1f
-            form
             fillColor = col
-            fillAlpha = alpha
+            fillAlpha = 200
             setDrawValues(false)
         }
     }
@@ -79,13 +77,13 @@ class TrainerActivity : AppCompatActivity() {
     private fun getUserHearthRateZones(): List<Zone> {
         val threshold = 164.0
         return listOf(
-            Zone(0.0 * threshold, 0.81 * threshold, "1 Recovery", color = R.color.hr1),
-            Zone(0.81 * threshold, 0.89 * threshold, "2 Aerobic", color = R.color.hr2),
-            Zone(0.89 * threshold, 0.93 * threshold, "3 Tempo", color = R.color.hr3),
-            Zone(0.93 * threshold, 0.99 * threshold, "4 SubThreshold", color = R.color.hr4),
-            Zone(0.99 * threshold, 1.02 * threshold, "5A SubThreshold", color = R.color.hr5),
-            Zone(1.02 * threshold, 1.06 * threshold, "5B Aerobic Capacity", color = R.color.hr6),
-            Zone(1.06 * threshold, 1.3 * threshold, "5C Anaerobic Capacity", color = R.color.hr7)
+            Zone(0.0 * threshold, 0.81 * threshold, "1 Recovery", getColor(R.color.hr1)),
+            Zone(0.81 * threshold, 0.89 * threshold, "2 Aerobic", getColor(R.color.hr2)),
+            Zone(0.89 * threshold, 0.93 * threshold, "3 Tempo", getColor(R.color.hr3)),
+            Zone(0.93 * threshold, 0.99 * threshold, "4 SubThreshold", getColor(R.color.hr4)),
+            Zone(0.99 * threshold, 1.02 * threshold, "5A SubThreshold", getColor(R.color.hr5)),
+            Zone(1.02 * threshold, 1.06 * threshold, "5B Aerobic Capacity", getColor(R.color.hr6)),
+            Zone(1.06 * threshold, 1.3 * threshold, "5C Anaerobic Capacity", getColor(R.color.hr7))
         )
     }
 
@@ -112,7 +110,6 @@ class TrainerActivity : AppCompatActivity() {
                 val userHearthRate = getUserHearthRateZones().first { z ->
                     z.matches(it.first().y.toDouble())
                 }
-                log(userHearthRate.name)
                 return@map buildSet(it, alpha = 90, col = userHearthRate.color)
             }
     }
@@ -148,18 +145,30 @@ class TrainerActivity : AppCompatActivity() {
                         .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
                         .filter { isIntervalInThePast(hearthRateData, it) }
 
-                    var currentDuration = currentDuration(hearthRateData.time).toMinutes()
-                    currentDuration = 25
+                    var currentDuration = currentDuration(hearthRateData.time).seconds
                     passedIntervals.last()[1].x = currentDuration.toFloat()
+                    passedIntervals.last()[2].x = currentDuration.toFloat()
+                    passedIntervals.last()[2].y = passedIntervals.last()[1].y
 
                     val userInterval = ArrayList(passedIntervals.flatMap { i -> i.map { j -> j } })
-                    val userSet = buildSet(userInterval, alpha = 90, col = Color.RED)
+
+                    val userSet = buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
+                        isHighlightEnabled = true
+                        setDrawHighlightIndicators(true)
+                        highLightColor = Color.BLACK
+                        highlightLineWidth = 4f
+                    }
 
                     val sets = trainingProgramSets().toMutableList()
                     sets.add(userSet)
 
-                    this@TrainerActivity.trainingChart.data = LineData(sets.toList())
 
+                    this@TrainerActivity.trainingChart.data = LineData(sets.toList())
+                    this@TrainerActivity.trainingChart.highlightValue(
+                        currentDuration.toFloat(),
+                        sets.indices.last
+                    )
+                    this@TrainerActivity.trainingChart.notifyDataSetChanged()
                     this@TrainerActivity.trainingChart.invalidate()
                 }
             }
@@ -184,8 +193,7 @@ class TrainerActivity : AppCompatActivity() {
         it: ArrayList<Entry>
     ): Boolean {
         val intervalStart = it[0].x
-        var currentDuration = currentDuration(hearthRateData.time).toMinutes()
-        currentDuration = 25 // TODO remove
+        var currentDuration = currentDuration(hearthRateData.time).seconds
         return currentDuration >= intervalStart
     }
 

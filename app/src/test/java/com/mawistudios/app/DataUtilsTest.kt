@@ -29,8 +29,8 @@ class DataUtilsTest {
     fun `should parse training program to graph format`() {
         val trainingProgram = getTrainingProgram()
         val expected = listOf(
-            listOf(Pair(0.0f, 140.0f), Pair(10.0f, 140.0f)),
-            listOf(Pair(10.0f, 190.0f), Pair(20.0f, 190.0f)),
+            listOf(Pair(0.0f, 140.0f), Pair(10.0f, 140.0f), Pair(10.0f, 190.0f)),
+            listOf(Pair(10.0f, 190.0f), Pair(20.0f, 190.0f), Pair(20.0f, 140.0f)),
             listOf(Pair(20.0f, 140.0f), Pair(30.0f, 140.0f))
         )
 

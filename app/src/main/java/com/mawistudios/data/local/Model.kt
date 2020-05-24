@@ -49,7 +49,7 @@ data class Zone(
     var min: Double,
     var max: Double,
     var name: String = "",
-    var color: Int = Color.BLACK
+    var color: Int = Color.RED
 ) {
     fun matches(hearthRate: Double): Boolean {
         val isMin = areClose(hearthRate, min, precision = 0.0001)
