@@ -1,6 +1,7 @@
 package com.mawistudios.data.hardware
 
 import com.mawistudios.app.log
+import com.mawistudios.data.hardware.sensors.SensorManager
 import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import com.wahoofitness.connector.listeners.discovery.DiscoveryListener
