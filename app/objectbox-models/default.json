@@ -29,7 +29,7 @@
     },
     {
       "id": "3:3692876108359363916",
-      "lastPropertyId": "4:7599229688976010290",
+      "lastPropertyId": "5:4267363825976714696",
       "name": "SensorData",
       "properties": [
         {
@@ -48,6 +48,11 @@
           "name": "dataPoint",
           "type": 8,
           "flags": 4
+        },
+        {
+          "id": "5:4267363825976714696",
+          "name": "dataPointType",
+          "type": 9
         }
       ],
       "relations": []

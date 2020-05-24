@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.Toast
 import com.mawistudios.app.log
 import com.mawistudios.data.local.ObjectBox
-import com.mawistudios.data.local.SensorDataRepo
 import com.mawistudios.trainer.R
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -31,13 +30,17 @@ object TrainingSessionObservable {
         observers.removeIf { it == trainingSessionObserver }
     }
 
-    fun onNewHearthRateData() = observers.forEach { it.onNewHearthRateData() }
+    fun onTrainingDataChanged() = observers.forEach { it.onTrainingDataChanged() }
     fun onDiscoveryStarted() = observers.forEach { it.onDiscoveryStarted() }
+    fun onSensorConnectionStateChanged(deviceName: String, state: String) {
+        observers.forEach { it.onSensorConnectionStateChanged(deviceName, state) }
+    }
 }
 
 interface ITrainingSessionObserver {
-    fun onNewHearthRateData()
+    fun onTrainingDataChanged()
     fun onDiscoveryStarted()
+    fun onSensorConnectionStateChanged(deviceName: String, state: String)
 }
 
 class MainActivity : ListActivity() {
@@ -81,7 +84,6 @@ class MainActivity : ListActivity() {
         )
     }
 
-
     private fun setupUIComponents() {
         setContentView(R.layout.activity_main)
 
@@ -102,18 +104,6 @@ class MainActivity : ListActivity() {
         }
     }
 
-    private val trainingSessionObserver = object : ITrainingSessionObserver {
-        override fun onNewHearthRateData() {
-            log("New sensor data")
-            listItems.add(SensorDataRepo.last().let { "${it.time} ${it.dataPoint}" })
-            adapter.notifyDataSetChanged()
-        }
-
-        override fun onDiscoveryStarted() {
-            output("discovery started")
-        }
-    }
-
     private lateinit var sensorService: SensorService
     private var isSensorServiceBound: Boolean = false
 
@@ -131,22 +121,40 @@ class MainActivity : ListActivity() {
         }
     }
 
-    var isServiceBound = false
+    private val trainingSessionObserver = object : ITrainingSessionObserver {
+        override fun onTrainingDataChanged() {}
+
+        override fun onDiscoveryStarted() {
+            output("discovery started")
+        }
+
+        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {
+            if (listItems.any { it.contains(deviceName) }) {
+                listItems.forEachIndexed { index, s ->
+                    if (s.contains(deviceName)) {
+                        listItems[index] = "$deviceName $state"
+                    }
+                }
+            } else {
+                listItems.add("$deviceName $state")
+            }
+
+            adapter.notifyDataSetChanged()
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         TrainingSessionObservable.register(trainingSessionObserver)
 
         Intent(this, SensorService::class.java).also {
-            isServiceBound = bindService(it, connection, Context.BIND_AUTO_CREATE)
+            bindService(it, connection, Context.BIND_AUTO_CREATE)
         }
     }
 
     override fun onStop() {
         super.onStop()
         TrainingSessionObservable.unRegister(trainingSessionObserver)
-        if (isServiceBound) {
-            unbindService(connection)
-        }
         isSensorServiceBound = false
     }
 

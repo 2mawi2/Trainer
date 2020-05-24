@@ -5,8 +5,7 @@ import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import com.wahoofitness.connector.listeners.discovery.DiscoveryListener
 
-class DeviceManager(var connector: HardwareConnector) :
-    DiscoveryListener {
+class DeviceManager(var connector: HardwareConnector) : DiscoveryListener {
     private var sensorManager: SensorManager
 
     init {

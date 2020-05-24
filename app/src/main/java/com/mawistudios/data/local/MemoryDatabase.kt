@@ -1,11 +1,9 @@
 package com.mawistudios.data.local
 
 import android.content.Context
-import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
-import io.objectbox.kotlin.boxFor
 import java.util.*
 
 object ObjectBox {
@@ -24,19 +22,17 @@ data class Sensor(
     var name: String
 )
 
+enum class DataPointType {
+    HEARTHRATE_BPM, WHEELREVS_KMH, WHEELREVS_DISTANCE, CRANKREVS_CADENCE
+}
+
 @Entity
 data class SensorData(
     @Id var id: Long = 0,
     var time: Date,
+    var dataPointType: String,
     var dataPoint: Double
 ) {
     //lateinit var sensor: ToOne<Sensor>
 }
 
-abstract class BaseRepo<T>(private val box: Box<T>) {
-    fun add(entity: T) = box.put(entity)
-    fun last(): T = box.all.last() // TODO find more efficient solution
-}
-
-object SensorDataRepo : BaseRepo<SensorData>(ObjectBox.boxStore.boxFor())
-object SensorRepo : BaseRepo<Sensor>(ObjectBox.boxStore.boxFor())

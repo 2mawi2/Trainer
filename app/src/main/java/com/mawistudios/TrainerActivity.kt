@@ -9,9 +9,9 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.mawistudios.app.format
 import com.mawistudios.data.local.SensorDataRepo
 import com.mawistudios.trainer.R
+import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 var entries = arrayListOf(
@@ -56,11 +56,26 @@ class TrainerActivity : AppCompatActivity() {
     }
 
     private val trainingSessionObserver = object : ITrainingSessionObserver {
-        override fun onNewHearthRateData() {
-            var lastHearthRate = SensorDataRepo.last()
-            findViewById<TextView>(R.id.hr_text).text = lastHearthRate.dataPoint.roundToInt().toString()
+        override fun onTrainingDataChanged() {
+            val bpm = SensorDataRepo.currentHearthRate()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            val kmh = SensorDataRepo.currentSpeed()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            val cadence = SensorDataRepo.currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            //val currentDistance = SensorDataRepo.currentDistance()
+
+            GlobalScope.launch(Dispatchers.Main) {
+                findViewById<TextView>(R.id.hr_text).text = bpm
+                findViewById<TextView>(R.id.speed_text).text = kmh
+                findViewById<TextView>(R.id.rpm_text).text = cadence
+            }
         }
-        override fun onDiscoveryStarted() {}
+
+        override fun onDiscoveryStarted() {
+
+        }
+
+        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {
+
+        }
     }
 
     override fun onStart() {
@@ -79,7 +94,7 @@ class TrainerActivity : AppCompatActivity() {
             color = Color.DKGRAY
             setCircleColor(Color.DKGRAY)
             lineWidth = 4f
-            circleRadius = 0f
+            circleRadius = 1f
             setDrawCircleHole(false)
             setDrawFilled(true)
             formLineWidth = 1f
