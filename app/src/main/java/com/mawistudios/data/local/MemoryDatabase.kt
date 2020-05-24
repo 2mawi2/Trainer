@@ -15,24 +15,3 @@ object ObjectBox {
     }
 }
 
-@Entity
-data class Sensor(
-    @Id var id: Long = 0,
-    var connectionParams: String? = null,
-    var name: String
-)
-
-enum class DataPointType {
-    HEARTHRATE_BPM, WHEELREVS_KMH, WHEELREVS_DISTANCE, CRANKREVS_CADENCE
-}
-
-@Entity
-data class SensorData(
-    @Id var id: Long = 0,
-    var time: Date,
-    var dataPointType: String,
-    var dataPoint: Double
-) {
-    //lateinit var sensor: ToOne<Sensor>
-}
-

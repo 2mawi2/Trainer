@@ -56,9 +56,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:3435543711459851212",
+      "lastPropertyId": "3:4192411570390238333",
+      "name": "Session",
+      "properties": [
+        {
+          "id": "1:3360262503280814555",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5430194828668180314",
+          "name": "startTime",
+          "type": 10
+        },
+        {
+          "id": "3:4192411570390238333",
+          "name": "endTime",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:3692876108359363916",
+  "lastEntityId": "4:3435543711459851212",
   "lastIndexId": "2:2071205838434536309",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
