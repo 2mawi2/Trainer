@@ -1,0 +1,84 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5820085686726763593",
+      "lastPropertyId": "3:8284843282095630118",
+      "name": "Sensor",
+      "properties": [
+        {
+          "id": "1:3395467160863733135",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9140956324410472700",
+          "name": "connectionParams",
+          "type": 9
+        },
+        {
+          "id": "3:8284843282095630118",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:3692876108359363916",
+      "lastPropertyId": "4:7599229688976010290",
+      "name": "SensorData",
+      "properties": [
+        {
+          "id": "1:571753407667021316",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3659708495937003787",
+          "name": "time",
+          "type": 10
+        },
+        {
+          "id": "3:142709061024316070",
+          "name": "dataPoint",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "4:7599229688976010290",
+          "name": "sensorId",
+          "indexId": "2:2071205838434536309",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Sensor"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:3692876108359363916",
+  "lastIndexId": "2:2071205838434536309",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    1407508526832967712
+  ],
+  "retiredIndexUids": [
+    7270145900201120416
+  ],
+  "retiredPropertyUids": [
+    4900144846482148434,
+    7649300429226291647,
+    8236753089177529308,
+    5489110878023493986
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
