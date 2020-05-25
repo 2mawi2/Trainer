@@ -1,12 +1,28 @@
 package com.mawistudios
 
+import android.graphics.Color
+import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
+import com.mawistudios.trainer.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
+
+data class DashboardData(
+    var hearthRate: SensorData?,
+    val bpm: String?,
+    val kmh: String?,
+    val cadence: String?
+)
 
 class TrainerViewModel : ViewModel() {
     private var session: Session
@@ -113,5 +129,32 @@ class TrainerViewModel : ViewModel() {
 
     fun getSession(): Session {
         return session
+    }
+
+    val dashboardData: MutableLiveData<DashboardData> by lazy {
+        MutableLiveData<DashboardData>()
+    }
+
+    private val trainingSessionObserver = object : ITrainingSessionObserver {
+        override fun onTrainingDataChanged() {
+            val hearthRateData = currentHearthRate()
+            dashboardData.value = DashboardData(
+                hearthRate = hearthRateData,
+                bpm = hearthRateData?.dataPoint?.roundToInt()?.toString() ?: "-",
+                kmh = currentSpeed()?.dataPoint?.roundToInt()?.toString() ?: "-",
+                cadence = currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
+            )
+            maybeUpdateStartTime(hearthRateData)
+        }
+        override fun onDiscoveryStarted() {}
+        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {}
+    }
+
+    fun onStart() {
+        TrainingSessionObservable.register(trainingSessionObserver)
+    }
+
+    fun onStop() {
+        TrainingSessionObservable.unRegister(trainingSessionObserver)
     }
 }

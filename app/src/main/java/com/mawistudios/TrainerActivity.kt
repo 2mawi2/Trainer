@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -24,6 +25,40 @@ class TrainerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = TrainerViewModel()
         setupUI()
+        viewModel.dashboardData.observe(this, dashboardDataObserver)
+    }
+
+    private val dashboardDataObserver = Observer<DashboardData> {
+        GlobalScope.launch(Dispatchers.Main) {
+            findViewById<TextView>(R.id.hr_text).text = it.bpm
+            findViewById<TextView>(R.id.speed_text).text = it.kmh
+            findViewById<TextView>(R.id.rpm_text).text = it.cadence
+        }
+
+        if (viewModel.hasSessionStarted()) {
+            it.hearthRate?.let { hr ->
+                val userInterval = viewModel.getPassedInterval(hr)
+
+                val sets = trainingProgramChartSet().toMutableList().apply {
+                    add(buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
+                        isHighlightEnabled = true
+                        setDrawHighlightIndicators(true)
+                        highLightColor = Color.BLACK
+                        highlightLineWidth = 4f
+                    })
+                }
+
+                trainingChart = trainingChart.apply {
+                    data = LineData(sets.toList())
+                    highlightValue(
+                        viewModel.currentDuration(hr.time).seconds.toFloat(),
+                        sets.indices.last
+                    )
+                    notifyDataSetChanged()
+                    invalidate()
+                }
+            }
+        }
     }
 
     private fun setupUI() {
@@ -86,64 +121,13 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-    private val trainingSessionObserver = object : ITrainingSessionObserver {
-        override fun onTrainingDataChanged() {
-            var session = viewModel.getSession()
-            val hearthRateData = viewModel.currentHearthRate()
-            val bpm = hearthRateData?.dataPoint?.roundToInt()?.toString() ?: "-"
-            val kmh = viewModel.currentSpeed()?.dataPoint?.roundToInt()?.toString() ?: "-"
-            val cadence = viewModel.currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
-            //val currentDistance = viewModel.currentDistance()
-
-            viewModel.maybeUpdateStartTime(hearthRateData)
-
-            GlobalScope.launch(Dispatchers.Main) {
-                findViewById<TextView>(R.id.hr_text).text = bpm
-                findViewById<TextView>(R.id.speed_text).text = kmh
-                findViewById<TextView>(R.id.rpm_text).text = cadence
-            }
-
-            if (viewModel.hasSessionStarted()) {
-                hearthRateData?.let {
-                    var userInterval = viewModel.getPassedInterval(hearthRateData)
-
-                    val userSet = buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
-                        isHighlightEnabled = true
-                        setDrawHighlightIndicators(true)
-                        highLightColor = Color.BLACK
-                        highlightLineWidth = 4f
-                    }
-
-                    val sets = trainingProgramChartSet().toMutableList()
-                    sets.add(userSet)
-
-                    this@TrainerActivity.trainingChart.data = LineData(sets.toList())
-                    this@TrainerActivity.trainingChart.highlightValue(
-                        viewModel.currentDuration(hearthRateData.time).seconds.toFloat(),
-                        sets.indices.last
-                    )
-                    this@TrainerActivity.trainingChart.notifyDataSetChanged()
-                    this@TrainerActivity.trainingChart.invalidate()
-                }
-            }
-        }
-
-        override fun onDiscoveryStarted() {
-
-        }
-
-        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {
-
-        }
-    }
-
     override fun onStart() {
         super.onStart()
-        TrainingSessionObservable.register(trainingSessionObserver)
+        viewModel.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        TrainingSessionObservable.unRegister(trainingSessionObserver)
+        viewModel.onStop()
     }
 }
