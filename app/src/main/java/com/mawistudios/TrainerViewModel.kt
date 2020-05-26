@@ -1,17 +1,10 @@
 package com.mawistudios
 
-import android.graphics.Color
-import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
-import com.mawistudios.trainer.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
@@ -26,9 +19,14 @@ data class DashboardData(
 
 class TrainerViewModel : ViewModel() {
     private var session: Session
+    private var hearthRateZones: List<Zone>
+    private var trainingProgram: TrainingProgram
 
     init {
-        session = SessionRepo.get(SessionRepo.add(Session()))
+        val newSession = SessionRepo.add(Session())
+        session = SessionRepo.get(newSession)
+        hearthRateZones = getUserHearthRateZones()
+        trainingProgram = getTrainingProgram()
     }
 
     fun getUserHearthRateZones(): List<Zone> {
@@ -44,11 +42,11 @@ class TrainerViewModel : ViewModel() {
         )
     }
 
+
     fun getTrainingProgram(): TrainingProgram {
-        val zones = getUserHearthRateZones()
         val targetCadence = Zone(70.0, 80.0)
 
-        val intervals = (zones.take(6) + zones.take(6).reversed()).map {
+        val intervals = (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).map {
             TrainingInterval(
                 duration = Duration.ofSeconds(60).toMillis(),
                 targetCadence = targetCadence,
@@ -75,7 +73,7 @@ class TrainerViewModel : ViewModel() {
         it: ArrayList<Entry>
     ): Boolean {
         val intervalStart = it[0].x
-        var currentDuration = currentDuration(hearthRateData.time).seconds
+        val currentDuration = currentDuration(hearthRateData.time).seconds
         return currentDuration >= intervalStart
     }
 
@@ -92,6 +90,7 @@ class TrainerViewModel : ViewModel() {
             }
         }
     }
+
 
     fun currentSpeed(): SensorData? {
         return SensorDataRepo.currentSpeed()
@@ -131,6 +130,31 @@ class TrainerViewModel : ViewModel() {
         return session
     }
 
+    val targetHearthRate: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+    val targetCadence: MutableLiveData<String> by lazy { MutableLiveData<String>() }
+
+    private fun updateTargetValues(hearthRateData: SensorData?) {
+        val currentInterval = getCurrentInterval(hearthRateData)
+        targetHearthRate.value = currentInterval.targetHearthRate.toString()
+        targetCadence.value = currentInterval.targetCadence.toString()
+    }
+
+    fun getCurrentInterval(hearthRateData: SensorData?): TrainingInterval {
+        if (hearthRateData == null || session.startTime == null) {
+            return trainingProgram.intervals.first()
+        }
+
+        val currentDuration = hearthRateData.time.time - session.startTime!!.time
+
+        val start = Duration.ZERO
+        return trainingProgram.intervals.first { interval ->
+            val end = start.plusMillis(interval.duration)
+            return@first currentDuration >= start.toMillis() && currentDuration < end.toMillis()
+        }
+    }
+
+
+
     val dashboardData: MutableLiveData<DashboardData> by lazy {
         MutableLiveData<DashboardData>()
     }
@@ -145,7 +169,9 @@ class TrainerViewModel : ViewModel() {
                 cadence = currentCadence()?.dataPoint?.roundToInt()?.toString() ?: "-"
             )
             maybeUpdateStartTime(hearthRateData)
+            updateTargetValues(hearthRateData)
         }
+
         override fun onDiscoveryStarted() {}
         override fun onSensorConnectionStateChanged(deviceName: String, state: String) {}
     }

@@ -7,7 +7,7 @@ import org.junit.Assert.*
 class ZoneTest {
 
     @Test
-    fun `zone should match hearth rate`() {
+    fun `should match hearth rate`() {
         assertTrue(Zone(0.0, 100.0).matches(0.00001))
         assertTrue(Zone(0.0, 100.0).matches(100.0))
         assertTrue(Zone(0.0, 100.0).matches(50.0))
@@ -15,5 +15,10 @@ class ZoneTest {
 
         assertTrue(Zone(0.0, 132.84).matches(132.84))
         assertTrue(Zone(0.0, 132.84).matches(132.84))
+    }
+
+    @Test
+    fun `should format to string`() {
+        assertEquals("50-100", Zone(50.0, 100.0).toString())
     }
 }

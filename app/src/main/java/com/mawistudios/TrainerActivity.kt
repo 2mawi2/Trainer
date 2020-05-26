@@ -25,7 +25,22 @@ class TrainerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = TrainerViewModel()
         setupUI()
+    }
+
+    private fun setupUI() {
         viewModel.dashboardData.observe(this, dashboardDataObserver)
+        viewModel.targetCadence.observe(this, Observer {
+            GlobalScope.launch(Dispatchers.Main) {
+                findViewById<TextView>(R.id.target_rpm_text).text = it
+            }
+        })
+        viewModel.targetHearthRate.observe(this, Observer {
+            GlobalScope.launch(Dispatchers.Main) {
+                findViewById<TextView>(R.id.target_hr_text).text = it
+            }
+        })
+        setContentView(R.layout.activity_trainer)
+        setupGraph()
     }
 
     private val dashboardDataObserver = Observer<DashboardData> {
@@ -61,10 +76,6 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUI() {
-        setContentView(R.layout.activity_trainer)
-        setupGraph()
-    }
 
     private fun buildSet(
         entries: ArrayList<Entry>,

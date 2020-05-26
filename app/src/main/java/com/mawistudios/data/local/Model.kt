@@ -60,6 +60,10 @@ data class Zone(
         }
         return hearthRate > min && (hearthRate < max || isMax)
     }
+
+    override fun toString(): String {
+        return "${min.toInt()}-${max.toInt()}"
+    }
 }
 
 data class TrainingInterval(
