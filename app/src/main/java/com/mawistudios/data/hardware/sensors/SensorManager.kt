@@ -2,17 +2,33 @@ package com.mawistudios.data.hardware.sensors
 
 import com.mawistudios.TrainingSessionObservable
 import com.mawistudios.app.log
-import com.mawistudios.data.hardware.sensors.CrankRevsSensorStrategy
-import com.mawistudios.data.hardware.sensors.HearthRateSensorStrategy
-import com.mawistudios.data.hardware.sensors.UnknownSensorStrategy
-import com.mawistudios.data.hardware.sensors.WheelRevsSensorStrategy
+import com.mawistudios.data.local.ISensorDataRepo
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionError
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionState
 import com.wahoofitness.connector.capabilities.Capability.CapabilityType
 import com.wahoofitness.connector.conn.connections.SensorConnection
 
 
-class SensorManager : SensorConnection.Listener {
+interface ISensorManager : SensorConnection.Listener {
+    override fun onSensorConnectionStateChanged(
+        connection: SensorConnection,
+        state: SensorConnectionState
+    )
+
+    override fun onSensorConnectionError(
+        connection: SensorConnection,
+        error: SensorConnectionError
+    )
+
+    override fun onNewCapabilityDetected(
+        connection: SensorConnection,
+        type: CapabilityType
+    )
+}
+
+class SensorManager(
+    private val sensorDataRepo: ISensorDataRepo
+) : ISensorManager {
     private fun SensorConnectionState.asString(): String = when (this) {
         SensorConnectionState.DISCONNECTED -> "DISCONNECTED"
         SensorConnectionState.CONNECTING -> "CONNECTING"
@@ -44,9 +60,9 @@ class SensorManager : SensorConnection.Listener {
         type: CapabilityType
     ) {
         when (type) {
-            CapabilityType.Heartrate -> HearthRateSensorStrategy()
-            CapabilityType.WheelRevs -> WheelRevsSensorStrategy()
-            CapabilityType.CrankRevs -> CrankRevsSensorStrategy()
+            CapabilityType.Heartrate -> HearthRateSensorStrategy(sensorDataRepo)
+            CapabilityType.WheelRevs -> WheelRevsSensorStrategy(sensorDataRepo)
+            CapabilityType.CrankRevs -> CrankRevsSensorStrategy(sensorDataRepo)
             else -> UnknownSensorStrategy()
         }.handleData(connection)
     }

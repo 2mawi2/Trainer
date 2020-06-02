@@ -1,19 +1,17 @@
 package com.mawistudios.data.hardware
 
 import com.mawistudios.app.log
+import com.mawistudios.data.hardware.sensors.ISensorManager
 import com.mawistudios.data.hardware.sensors.SensorManager
 import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import com.wahoofitness.connector.listeners.discovery.DiscoveryListener
 
-class DeviceManager(var connector: HardwareConnector) : DiscoveryListener {
-    private var sensorManager: SensorManager
-
-    init {
-        sensorManager = SensorManager()
-    }
-
-    var devices: MutableList<ConnectionParams> = mutableListOf()
+class DeviceManager(
+    private var connector: HardwareConnector,
+    private var sensorManager: ISensorManager
+) : DiscoveryListener {
+    private var devices: MutableList<ConnectionParams> = mutableListOf()
 
     override fun onDiscoveredDeviceRssiChanged(device: ConnectionParams, rssi: Int) {
         log("rssi changed of device: ${device.name}")

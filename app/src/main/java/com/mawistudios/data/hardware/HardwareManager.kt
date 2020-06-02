@@ -5,12 +5,12 @@ import com.mawistudios.SensorService
 import com.mawistudios.TrainingSessionObservable
 import com.mawistudios.app.log
 import com.mawistudios.data.hardware.DeviceManager
+import com.mawistudios.data.hardware.sensors.ISensorManager
 import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.HardwareConnectorEnums
 import com.wahoofitness.connector.HardwareConnectorTypes
 import com.wahoofitness.connector.conn.connections.SensorConnection
 import java.lang.Exception
-import javax.inject.Inject
 
 interface IHardwareManager {
     fun discover()
@@ -19,7 +19,8 @@ interface IHardwareManager {
 }
 
 class HardwareManager constructor(
-    val serviceContext: Context
+    private val serviceContext: Context,
+    private val sensorManager: ISensorManager
 ) : IHardwareManager {
     private val discoveryListener: DeviceManager
     private val connector: HardwareConnector
@@ -59,7 +60,7 @@ class HardwareManager constructor(
     init {
         connector = HardwareConnector(serviceContext, hardWareListener)
         com.wahoofitness.common.log.Logger.setLogLevel(android.util.Log.VERBOSE)
-        discoveryListener = DeviceManager(connector)
+        discoveryListener = DeviceManager(connector, sensorManager)
     }
 
     var discoveryStarted: Boolean = false

@@ -13,17 +13,16 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.mawistudios.data.local.*
 import com.mawistudios.trainer.R
 import kotlinx.coroutines.*
+import org.koin.android.ext.android.inject
 import kotlin.collections.ArrayList
-import kotlin.math.roundToInt
-
 
 class TrainerActivity : AppCompatActivity() {
+    private val viewModel : TrainerViewModel by inject()
+
     private lateinit var trainingChart: LineChart
-    private lateinit var viewModel: TrainerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = TrainerViewModel()
         setupUI()
     }
 
@@ -52,27 +51,31 @@ class TrainerActivity : AppCompatActivity() {
 
         if (viewModel.hasSessionStarted()) {
             it.hearthRate?.let { hr ->
-                val userInterval = viewModel.getPassedInterval(hr)
-
-                val sets = trainingProgramChartSet().toMutableList().apply {
-                    add(buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
-                        isHighlightEnabled = true
-                        setDrawHighlightIndicators(true)
-                        highLightColor = Color.BLACK
-                        highlightLineWidth = 4f
-                    })
-                }
-
-                trainingChart = trainingChart.apply {
-                    data = LineData(sets.toList())
-                    highlightValue(
-                        viewModel.currentDuration(hr.time).seconds.toFloat(),
-                        sets.indices.last
-                    )
-                    notifyDataSetChanged()
-                    invalidate()
-                }
+                updateIntervalChart(hr)
             }
+        }
+    }
+
+    private fun updateIntervalChart(hr: SensorData) {
+        val userInterval = viewModel.getPassedInterval(hr)
+
+        val sets = trainingProgramChartSet().toMutableList().apply {
+            add(buildSet(userInterval, alpha = 256, col = Color.BLACK).apply {
+                isHighlightEnabled = true
+                setDrawHighlightIndicators(true)
+                highLightColor = Color.BLACK
+                highlightLineWidth = 4f
+            })
+        }
+
+        trainingChart = trainingChart.apply {
+            data = LineData(sets.toList())
+            highlightValue(
+                viewModel.currentDuration(hr.time).seconds.toFloat(),
+                sets.indices.last
+            )
+            notifyDataSetChanged()
+            invalidate()
         }
     }
 

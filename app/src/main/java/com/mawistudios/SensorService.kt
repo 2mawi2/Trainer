@@ -6,15 +6,11 @@ import android.os.Binder
 import android.os.IBinder
 import com.mawistudios.data.hardware.HardwareManager
 import com.mawistudios.data.hardware.IHardwareManager
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class SensorService : Service() {
-    lateinit var hardwareManager: IHardwareManager
-
-    override fun onCreate() {
-        super.onCreate()
-        hardwareManager = HardwareManager(this)
-    }
+    private val hardwareManager: IHardwareManager by inject { parametersOf(this) }
 
     fun startDiscovery() = hardwareManager.discover()
 

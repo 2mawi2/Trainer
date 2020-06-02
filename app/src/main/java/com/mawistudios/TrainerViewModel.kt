@@ -17,16 +17,19 @@ data class DashboardData(
     val cadence: String?
 )
 
-class TrainerViewModel : ViewModel() {
+class TrainerViewModel(
+    private val sessionRepo: ISessionRepo,
+    private val sensorDataRepo: ISensorDataRepo
+) : ViewModel() {
     private var session: Session
     private var hearthRateZones: List<Zone>
-    private var trainingProgram: TrainingProgram
+    var trainingProgram: TrainingProgram
 
     init {
-        val newSession = SessionRepo.add(Session())
-        session = SessionRepo.get(newSession)
+        val id = sessionRepo.add(Session())
+        session = sessionRepo.get(id)
         hearthRateZones = getUserHearthRateZones()
-        trainingProgram = getTrainingProgram()
+        trainingProgram = pullTrainingProgram()
     }
 
     fun getUserHearthRateZones(): List<Zone> {
@@ -43,7 +46,7 @@ class TrainerViewModel : ViewModel() {
     }
 
 
-    fun getTrainingProgram(): TrainingProgram {
+    private fun pullTrainingProgram(): TrainingProgram {
         val targetCadence = Zone(70.0, 80.0)
 
         val intervals = (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).map {
@@ -59,7 +62,7 @@ class TrainerViewModel : ViewModel() {
 
 
     fun trainingProgramSets(): List<ArrayList<Entry>> {
-        return getTrainingProgram()
+        return pullTrainingProgram()
             .toGraphFormat()
             .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
     }
@@ -78,13 +81,13 @@ class TrainerViewModel : ViewModel() {
     }
 
     fun currentHearthRate(): SensorData? {
-        return SensorDataRepo.currentHearthRate()
+        return sensorDataRepo.currentHearthRate()
     }
 
     fun maybeUpdateStartTime(hearthRateData: SensorData?) {
         hearthRateData?.let { hrData ->
             if (!session.hasStarted()) {
-                session = SessionRepo.update(session.id) { s ->
+                session = sessionRepo.update(session.id) { s ->
                     s.startTime = hrData.time
                 }
             }
@@ -93,15 +96,15 @@ class TrainerViewModel : ViewModel() {
 
 
     fun currentSpeed(): SensorData? {
-        return SensorDataRepo.currentSpeed()
+        return sensorDataRepo.currentSpeed()
     }
 
     fun currentCadence(): SensorData? {
-        return SensorDataRepo.currentCadence()
+        return sensorDataRepo.currentCadence()
     }
 
     fun currentDistance(): SensorData? {
-        return SensorDataRepo.currentDistance()
+        return sensorDataRepo.currentDistance()
     }
 
     fun hasSessionStarted(): Boolean {
@@ -110,7 +113,7 @@ class TrainerViewModel : ViewModel() {
 
     //calculates passed session interval until now
     fun getPassedInterval(hearthRateData: SensorData): ArrayList<Entry> {
-        val passedIntervals = getTrainingProgram()
+        val passedIntervals = pullTrainingProgram()
             .toGraphFormat()
             .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
             .filter { isIntervalInThePast(hearthRateData, it) }
@@ -126,14 +129,10 @@ class TrainerViewModel : ViewModel() {
         return userInterval
     }
 
-    fun getSession(): Session {
-        return session
-    }
-
     val targetHearthRate: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val targetCadence: MutableLiveData<String> by lazy { MutableLiveData<String>() }
 
-    private fun updateTargetValues(hearthRateData: SensorData?) {
+    fun updateTargetValues(hearthRateData: SensorData?) {
         val currentInterval = getCurrentInterval(hearthRateData)
         targetHearthRate.value = currentInterval.targetHearthRate.toString()
         targetCadence.value = currentInterval.targetCadence.toString()
@@ -152,7 +151,6 @@ class TrainerViewModel : ViewModel() {
             return@first currentDuration >= start.toMillis() && currentDuration < end.toMillis()
         }
     }
-
 
 
     val dashboardData: MutableLiveData<DashboardData> by lazy {

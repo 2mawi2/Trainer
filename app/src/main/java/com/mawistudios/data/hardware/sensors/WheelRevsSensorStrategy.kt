@@ -3,6 +3,7 @@ package com.mawistudios.data.hardware.sensors
 import com.mawistudios.TrainingSessionObservable
 import com.mawistudios.app.log
 import com.mawistudios.data.local.DataPointType
+import com.mawistudios.data.local.ISensorDataRepo
 import com.mawistudios.data.local.SensorData
 import com.mawistudios.data.local.SensorDataRepo
 import com.wahoofitness.connector.capabilities.Capability
@@ -10,7 +11,7 @@ import com.wahoofitness.connector.capabilities.WheelRevs
 import com.wahoofitness.connector.conn.connections.SensorConnection
 import java.util.*
 
-class WheelRevsSensorStrategy : ICapabilityStrategy {
+class WheelRevsSensorStrategy(val sensorDataRepo: ISensorDataRepo) : ICapabilityStrategy {
     override fun handleData(connection: SensorConnection) {
         log("new wheel rev capability")
         val wheelRevs =
@@ -23,7 +24,7 @@ class WheelRevsSensorStrategy : ICapabilityStrategy {
             val bikeSpeedKMH = data.wheelSpeed.asRpm() * 60 * wheelCircumference / 1000
             val totalBikeDistanceM = data.wheelRevs * wheelCircumference
 
-            SensorDataRepo.add(
+            sensorDataRepo.add(
                 SensorData(
                     dataPoint = bikeSpeedKMH,
                     time = Date(data.timeMs),

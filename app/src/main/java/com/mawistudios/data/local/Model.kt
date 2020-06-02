@@ -13,9 +13,9 @@ import kotlin.math.abs
 data class Sensor(
     @Id var id: Long = 0,
     var connectionParams: String? = null,
+    val status: String? = null,
     var name: String
 )
-
 enum class DataPointType {
     HEARTHRATE_BPM, WHEELREVS_KMH, WHEELREVS_DISTANCE, CRANKREVS_CADENCE
 }
