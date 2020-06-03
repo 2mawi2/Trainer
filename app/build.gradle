@@ -48,6 +48,8 @@ dependencies {
     implementation 'com.mysugr.MPAndroidChart:MPAndroidChart:3.1.0-mysugr-1'
     implementation 'pub.devrel:easypermissions:3.0.0'
 
+    implementation 'com.jjoe64:graphview:4.2.2'
+
     implementation "org.koin:koin-core:2.1.5"
     implementation "org.koin:koin-android:2.1.5"
     implementation "org.koin:koin-android-scope:2.1.5"
