@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
+import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
@@ -171,7 +172,10 @@ class TrainerViewModel(
         }
 
         override fun onDiscoveryStarted() {}
-        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {}
+        override fun onSensorConnectionStateChanged(
+            deviceName: String,
+            state: String
+        ) {}
     }
 
     fun onStart() {

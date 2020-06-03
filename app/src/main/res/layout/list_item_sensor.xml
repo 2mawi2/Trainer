@@ -4,6 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip">
+
+    <ImageView
+        android:id="@+id/list_item_sensor_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"></ImageView>
+
     <TextView
         android:id="@+id/sensor_status"
         android:layout_width="fill_parent"
@@ -25,5 +32,6 @@
         android:gravity="center_vertical"
         android:text="Example application"
         android:textSize="16sp" />
+
 
 </RelativeLayout>

@@ -7,10 +7,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import com.mawistudios.data.local.ObjectBox
 import com.mawistudios.data.local.Sensor
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
-import org.koin.android.ext.android.inject
 import org.koin.core.context.startKoin
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -30,28 +28,39 @@ import pub.devrel.easypermissions.EasyPermissions
 interface ITrainingSessionObserver {
     fun onTrainingDataChanged()
     fun onDiscoveryStarted()
-    fun onSensorConnectionStateChanged(deviceName: String, state: String)
+    fun onSensorConnectionStateChanged(
+        deviceName: String,
+        state: String
+    )
 }
 
 class SensorAdapter(
     private val context: Context,
     private val dataSource: ArrayList<Sensor>
 ) : BaseAdapter() {
-    private val inflater: LayoutInflater
-            = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val inflater: LayoutInflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val rowView = inflater.inflate(layout.list_item_sensor, parent, false)
 
-        val sensorNameTextView = rowView.findViewById<TextView>(R.id.sensor_name)
-        val sensorStatusTextView = rowView.findViewById<TextView>(R.id.sensor_status)
+        val nameTextView = rowView.findViewById<TextView>(R.id.sensor_name)
+        val statusTextView = rowView.findViewById<TextView>(R.id.sensor_status)
+        val backgroundImage = rowView.findViewById<ImageView>(R.id.list_item_sensor_background)
 
         val sensor = getItem(position) as Sensor
-        sensorNameTextView.text = sensor.name
-        sensorStatusTextView.text = sensor.status
+
+        nameTextView.text = sensor.name
+        statusTextView.text = sensor.state
+
+        backgroundImage.setBackgroundColor(
+            if (isSensorConnected(sensor)) context.getColor(R.color.colorAccent) else Color.WHITE
+        )
 
         return rowView
     }
+
+    private fun isSensorConnected(sensor: Sensor) = sensor.state.equals("connected", true)
 
     override fun getItem(position: Int): Any = dataSource[position]
     override fun getItemId(position: Int): Long = position.toLong()
@@ -59,10 +68,8 @@ class SensorAdapter(
 }
 
 class MainActivity : ListActivity() {
-    private val viewModel : MainViewModel by inject()
-
-    lateinit var adapter: ArrayAdapter<String>
-    var listItems = ArrayList<String>()
+    lateinit var adapter: SensorAdapter
+    var discoveredSensors = ArrayList<Sensor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,12 +115,7 @@ class MainActivity : ListActivity() {
     private fun setupUIComponents() {
         setContentView(layout.activity_main)
 
-        this.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            listItems
-        )
-
+        this.adapter = SensorAdapter(this, discoveredSensors)
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {
@@ -121,9 +123,12 @@ class MainActivity : ListActivity() {
             sensorService.startDiscovery()
         }
 
-        findViewById<Button>(R.id.trainer_button).setOnClickListener {
-            log("Starting trainer")
-            startActivity(Intent(this, TrainerActivity::class.java))
+        findViewById<Button>(R.id.trainer_button).let {
+            it.setOnClickListener {
+                log("Starting trainer")
+                startActivity(Intent(this, TrainerActivity::class.java))
+            }
+            it.isEnabled = false
         }
     }
 
@@ -144,6 +149,11 @@ class MainActivity : ListActivity() {
         }
     }
 
+    fun updateTrainerButtonStatus() {
+        val isAtLeastOneSensorActive = discoveredSensors.any { it.isConnected() }
+        findViewById<Button>(R.id.trainer_button).isEnabled = isAtLeastOneSensorActive
+    }
+
     private val trainingSessionObserver = object : ITrainingSessionObserver {
         override fun onTrainingDataChanged() {}
 
@@ -151,18 +161,23 @@ class MainActivity : ListActivity() {
             output("discovery started")
         }
 
-        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {
-            if (listItems.any { it.contains(deviceName) }) {
-                listItems.forEachIndexed { index, s ->
-                    if (s.contains(deviceName)) {
-                        listItems[index] = "$deviceName $state"
-                    }
-                }
-            } else {
-                listItems.add("$deviceName $state")
-            }
-
+        override fun onSensorConnectionStateChanged(
+            deviceName: String,
+            state: String
+        ) {
+            addOrUpdateSensor(deviceName, state)
             adapter.notifyDataSetChanged()
+            updateTrainerButtonStatus()
+        }
+
+        private fun addOrUpdateSensor(deviceName: String, state: String) {
+            if (discoveredSensors.any { it.name == deviceName }) {
+                discoveredSensors.firstOrNull { it.name == deviceName }?.state = state
+            } else {
+                discoveredSensors.add(
+                    Sensor(name = deviceName, state = state)
+                )
+            }
         }
     }
 
@@ -182,8 +197,7 @@ class MainActivity : ListActivity() {
     }
 
     fun output(text: String) {
-        listItems.add(text)
-        adapter.notifyDataSetChanged()
+        findViewById<TextView>(R.id.info).text = text
     }
 
 }

@@ -1,7 +1,6 @@
 package com.mawistudios.app
 
 import android.content.Context
-import com.mawistudios.MainViewModel
 import com.mawistudios.TrainerViewModel
 import com.mawistudios.data.hardware.HardwareManager
 import com.mawistudios.data.hardware.IHardwareManager
@@ -17,7 +16,6 @@ val appModule = module {
     factory { SensorManager(get()) as ISensorManager }
 
     factory { TrainerViewModel(get(), get()) }
-    factory { MainViewModel() }
 
     factory { (context: Context) -> HardwareManager(context, get()) as IHardwareManager }
 }

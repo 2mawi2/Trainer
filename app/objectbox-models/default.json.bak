@@ -71,14 +71,12 @@
         {
           "id": "2:5430194828668180314",
           "name": "startTime",
-          "type": 6,
-          "flags": 2
+          "type": 10
         },
         {
           "id": "3:4192411570390238333",
           "name": "endTime",
-          "type": 6,
-          "flags": 2
+          "type": 10
         }
       ],
       "relations": []

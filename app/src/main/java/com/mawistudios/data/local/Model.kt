@@ -12,10 +12,12 @@ import kotlin.math.abs
 @Entity
 data class Sensor(
     @Id var id: Long = 0,
-    var connectionParams: String? = null,
-    val status: String? = null,
+    var state: String? = null,
     var name: String
-)
+) {
+    fun isConnected(): Boolean = this.state.equals("connected", true)
+}
+
 enum class DataPointType {
     HEARTHRATE_BPM, WHEELREVS_KMH, WHEELREVS_DISTANCE, CRANKREVS_CADENCE
 }

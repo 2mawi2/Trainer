@@ -1,5 +1,7 @@
 package com.mawistudios
 
+import com.wahoofitness.connector.conn.connections.params.ConnectionParams
+
 object TrainingSessionObservable {
     private var observers = mutableListOf<ITrainingSessionObserver>()
 
@@ -15,7 +17,10 @@ object TrainingSessionObservable {
 
     fun onDiscoveryStarted() = observers.forEach { it.onDiscoveryStarted() }
 
-    fun onSensorConnectionStateChanged(deviceName: String, state: String) {
+    fun onSensorConnectionStateChanged(
+        deviceName: String,
+        state: String
+    ) {
         observers.forEach { it.onSensorConnectionStateChanged(deviceName, state) }
     }
 }
