@@ -9,6 +9,12 @@ import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 
+object GlobalState {
+    var isKoinInitialized = false
+    var isObjectBoxInitialized = false
+    var isLocationPermissionRequested = false
+}
+
 fun appendQueryParam(uri: String, queryParam: String): URI {
     val oldUri = URI(uri)
 

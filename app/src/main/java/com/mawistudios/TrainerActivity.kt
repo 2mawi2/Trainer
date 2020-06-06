@@ -10,9 +10,6 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.jjoe64.graphview.GraphView
-import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
 import com.mawistudios.data.local.*
 import com.mawistudios.trainer.R
 import kotlinx.coroutines.*
@@ -44,20 +41,6 @@ class TrainerActivity : AppCompatActivity() {
         })
         setContentView(R.layout.activity_trainer)
         setupGraph()
-        findViewById<GraphView>(R.id.graph).let {
-            it.addSeries(
-                LineGraphSeries(
-                    arrayOf(
-                        DataPoint(0.0, 1.0),
-                        DataPoint(1.0, 5.0),
-                        DataPoint(2.0, 3.0),
-                        DataPoint(3.0, 2.0),
-                        DataPoint(4.0, 6.0)
-                    )
-                )
-            )
-        }
-
     }
 
     private val dashboardDataObserver = Observer<DashboardData> {

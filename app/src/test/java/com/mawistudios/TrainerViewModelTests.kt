@@ -27,7 +27,6 @@ class TrainerViewModelTests {
     @Test
     fun `should use first interval when hearthRateData is null`() {
         whenever(sessionRepoMock.get(any())).thenReturn(Session(startTime = Date()))
-
         sut().apply {
             val result = getCurrentInterval(null)
             assertEquals(trainingProgram.intervals.first(), result)

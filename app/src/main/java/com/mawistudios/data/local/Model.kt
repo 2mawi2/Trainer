@@ -1,6 +1,5 @@
 package com.mawistudios.data.local
 
-import android.graphics.Color
 import com.mawistudios.app.sumByLong
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -71,7 +70,9 @@ data class Zone(
 data class TrainingInterval(
     var duration: Long,
     var targetCadence: Zone,
-    var targetHearthRate: Zone
+    var targetHearthRate: Zone,
+    val start: Long = 0,
+    val end: Long = 0
 )
 
 data class TrainingProgram(

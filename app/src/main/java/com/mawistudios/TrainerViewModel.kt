@@ -3,9 +3,9 @@ package com.mawistudios
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
+import com.mawistudios.app.log
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
-import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
@@ -50,14 +50,21 @@ class TrainerViewModel(
     private fun pullTrainingProgram(): TrainingProgram {
         val targetCadence = Zone(70.0, 80.0)
 
-        val intervals = (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).map {
-            TrainingInterval(
-                duration = Duration.ofSeconds(60).toMillis(),
+        var intervalStart: Long = 0
+        val intervals = (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).toList().map {
+            val duration = Duration.ofSeconds(60).toMillis()
+            val intervalEnd = intervalStart + duration
+            val interval = TrainingInterval(
+                start = intervalStart,
+                end = intervalEnd,
+                duration = duration,
                 targetCadence = targetCadence,
                 targetHearthRate = it
             )
+            intervalStart += intervalEnd
+            interval
         }
-
+        intervals.forEach { log(it.toString()) }
         return TrainingProgram(intervals = intervals)
     }
 
@@ -146,10 +153,8 @@ class TrainerViewModel(
 
         val currentDuration = hearthRateData.time.time - session.startTime!!.time
 
-        val start = Duration.ZERO
-        return trainingProgram.intervals.first { interval ->
-            val end = start.plusMillis(interval.duration)
-            return@first currentDuration >= start.toMillis() && currentDuration < end.toMillis()
+        return trainingProgram.intervals.first {
+            currentDuration >= it.start && currentDuration < it.end
         }
     }
 
@@ -172,10 +177,7 @@ class TrainerViewModel(
         }
 
         override fun onDiscoveryStarted() {}
-        override fun onSensorConnectionStateChanged(
-            deviceName: String,
-            state: String
-        ) {}
+        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {}
     }
 
     fun onStart() {

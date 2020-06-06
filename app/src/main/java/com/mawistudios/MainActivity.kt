@@ -7,13 +7,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import com.mawistudios.app.GlobalState
 import com.mawistudios.app.appModule
 import com.mawistudios.app.log
 import com.mawistudios.data.local.ObjectBox
@@ -25,76 +24,54 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 
-interface ITrainingSessionObserver {
-    fun onTrainingDataChanged()
-    fun onDiscoveryStarted()
-    fun onSensorConnectionStateChanged(
-        deviceName: String,
-        state: String
-    )
-}
-
-class SensorAdapter(
-    private val context: Context,
-    private val dataSource: ArrayList<Sensor>
-) : BaseAdapter() {
-    private val inflater: LayoutInflater =
-        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val rowView = inflater.inflate(layout.list_item_sensor, parent, false)
-
-        val nameTextView = rowView.findViewById<TextView>(R.id.sensor_name)
-        val statusTextView = rowView.findViewById<TextView>(R.id.sensor_status)
-        val backgroundImage = rowView.findViewById<ImageView>(R.id.list_item_sensor_background)
-
-        val sensor = getItem(position) as Sensor
-
-        nameTextView.text = sensor.name
-        statusTextView.text = sensor.state
-
-        backgroundImage.setBackgroundColor(
-            if (isSensorConnected(sensor)) context.getColor(R.color.colorAccent) else Color.WHITE
-        )
-
-        return rowView
-    }
-
-    private fun isSensorConnected(sensor: Sensor) = sensor.state.equals("connected", true)
-
-    override fun getItem(position: Int): Any = dataSource[position]
-    override fun getItemId(position: Int): Long = position.toLong()
-    override fun getCount(): Int = dataSource.size
-}
-
 class MainActivity : ListActivity() {
     lateinit var adapter: SensorAdapter
     var discoveredSensors = ArrayList<Sensor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startKoin {
-            printLogger()
-            modules(appModule)
-        }
+
+        initKoin()
+        initPersistence()
         requestLocationPermission()
-        ObjectBox.init(this)
+
         setupUIComponents()
+
         log("Application started")
+    }
+
+    private fun initPersistence() {
+        if (!GlobalState.isObjectBoxInitialized) {
+            ObjectBox.init(this)
+            GlobalState.isObjectBoxInitialized = true
+        }
+    }
+
+    private fun initKoin() {
+        if (!GlobalState.isKoinInitialized) {
+            startKoin {
+                printLogger()
+                modules(appModule)
+            }
+            GlobalState.isKoinInitialized = true
+        }
     }
 
     @AfterPermissionGranted(1)
     fun requestLocationPermission() {
-        val perms = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        if (EasyPermissions.hasPermissions(this, *perms)) {
-            Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show()
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                "Please grant the location permission",
-                1,
-                *perms
-            )
+        if (!GlobalState.isLocationPermissionRequested) {
+            val perms = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (EasyPermissions.hasPermissions(this, *perms)) {
+                Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show()
+            } else {
+                EasyPermissions.requestPermissions(
+                    this,
+                    "Please grant the location permission",
+                    1,
+                    *perms
+                )
+            }
+            GlobalState.isLocationPermissionRequested = true
         }
     }
 
@@ -119,8 +96,7 @@ class MainActivity : ListActivity() {
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {
-            log("Starting discovery")
-            sensorService.startDiscovery()
+            startDiscovery()
         }
 
         findViewById<Button>(R.id.trainer_button).let {
@@ -132,20 +108,21 @@ class MainActivity : ListActivity() {
         }
     }
 
-    private lateinit var sensorService: SensorService
-    private var isSensorServiceBound: Boolean = false
+    private fun startDiscovery() {
+        log("Starting discovery")
+        sensorService.startDiscovery()
+    }
 
+    private lateinit var sensorService: SensorService
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             log("Service connected")
             val binder = service as SensorService.LocalBinder
             sensorService = binder.getService()
-            isSensorServiceBound = true
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
             log("Service disconnected")
-            isSensorServiceBound = false
         }
     }
 
@@ -181,23 +158,30 @@ class MainActivity : ListActivity() {
         }
     }
 
+    private var isServiceBound: Boolean = false
     override fun onStart() {
         super.onStart()
         TrainingSessionObservable.register(trainingSessionObserver)
 
-        Intent(this, SensorService::class.java).also {
+        var intent = Intent(this, SensorService::class.java).also {
             bindService(it, connection, Context.BIND_AUTO_CREATE)
+            isServiceBound = true
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isServiceBound) {
+            unbindService(connection)
         }
     }
 
     override fun onStop() {
         super.onStop()
         TrainingSessionObservable.unRegister(trainingSessionObserver)
-        isSensorServiceBound = false
     }
 
     fun output(text: String) {
         findViewById<TextView>(R.id.info).text = text
     }
-
 }
