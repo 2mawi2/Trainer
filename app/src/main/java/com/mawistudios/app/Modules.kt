@@ -13,9 +13,10 @@ val appModule = module {
     single { SessionRepo() as ISessionRepo }
     single { SensorRepo() as ISensorRepo }
     single { SensorDataRepo() as ISensorDataRepo }
+    single { AthleteRepo() as IAthleteRepo }
     factory { SensorManager(get()) as ISensorManager }
 
-    factory { TrainerViewModel(get(), get()) }
+    factory { TrainerViewModel(get(), get(), get()) }
 
     factory { (context: Context) -> HardwareManager(context, get()) as IHardwareManager }
 }

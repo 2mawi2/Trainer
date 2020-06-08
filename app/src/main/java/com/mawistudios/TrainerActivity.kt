@@ -2,6 +2,7 @@ package com.mawistudios
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -39,6 +40,21 @@ class TrainerActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.target_hr_text).text = it
             }
         })
+        viewModel.remainingInterval.observe(this, Observer {
+            GlobalScope.launch(Dispatchers.Main) {
+                findViewById<TextView>(R.id.interval_text).text = it
+            }
+        })
+        viewModel.hearthRateProgress.observe(this, Observer {
+            GlobalScope.launch(Dispatchers.Main){
+                findViewById<ProgressBar>(R.id.hr_progress_bar).progress = it
+            }
+        })
+        viewModel.cadenceProgress.observe(this, Observer {
+            GlobalScope.launch(Dispatchers.Main){
+                findViewById<ProgressBar>(R.id.rpm_progress_bar).progress = it
+            }
+        })
         setContentView(R.layout.activity_trainer)
         setupGraph()
     }
@@ -72,7 +88,7 @@ class TrainerActivity : AppCompatActivity() {
         trainingChart = trainingChart.apply {
             data = LineData(sets.toList())
             highlightValue(
-                viewModel.currentDuration(hr.time).seconds.toFloat(),
+                viewModel.currentDuration(hr.time).toMillis().toFloat(),
                 sets.indices.last
             )
             notifyDataSetChanged()
@@ -114,7 +130,7 @@ class TrainerActivity : AppCompatActivity() {
 
     private fun trainingProgramChartSet(): List<LineDataSet> {
         return viewModel.trainingProgramSets().map {
-            val userHearthRate = viewModel.getUserHearthRateZones().first { z ->
+            val userHearthRate = viewModel.hearthRateZones.first { z ->
                 z.matches(it.first().y.toDouble())
             }
             return@map buildSet(it, alpha = 90, col = userHearthRate.color())

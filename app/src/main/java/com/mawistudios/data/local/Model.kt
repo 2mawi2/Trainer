@@ -52,6 +52,8 @@ data class Zone(
     var name: String = "",
     var index: Int = 0
 ) {
+    val delta: Double = Math.abs(max - min)
+
     fun matches(hearthRate: Double): Boolean {
         val isMin = areClose(hearthRate, min, precision = 0.0001)
         val isMax = areClose(hearthRate, max, precision = 0.0001)
@@ -73,7 +75,9 @@ data class TrainingInterval(
     var targetHearthRate: Zone,
     val start: Long = 0,
     val end: Long = 0
-)
+) {
+    fun duration(): Duration = Duration.ofMillis(start - end)
+}
 
 data class TrainingProgram(
     var intervals: List<TrainingInterval>

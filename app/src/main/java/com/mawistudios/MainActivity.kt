@@ -1,7 +1,6 @@
 package com.mawistudios
 
 
-import android.Manifest
 import android.app.ListActivity
 import android.content.ComponentName
 import android.content.Context
@@ -11,16 +10,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import com.mawistudios.app.GlobalState
-import com.mawistudios.app.appModule
 import com.mawistudios.app.log
-import com.mawistudios.data.local.ObjectBox
 import com.mawistudios.data.local.Sensor
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
-import org.koin.core.context.startKoin
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 
@@ -40,53 +33,11 @@ class MainActivity : ListActivity() {
         log("Application started")
     }
 
-    private fun initPersistence() {
-        if (!GlobalState.isObjectBoxInitialized) {
-            ObjectBox.init(this)
-            GlobalState.isObjectBoxInitialized = true
-        }
-    }
-
-    private fun initKoin() {
-        if (!GlobalState.isKoinInitialized) {
-            startKoin {
-                printLogger()
-                modules(appModule)
-            }
-            GlobalState.isKoinInitialized = true
-        }
-    }
-
-    @AfterPermissionGranted(1)
-    fun requestLocationPermission() {
-        if (!GlobalState.isLocationPermissionRequested) {
-            val perms = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-            if (EasyPermissions.hasPermissions(this, *perms)) {
-                Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show()
-            } else {
-                EasyPermissions.requestPermissions(
-                    this,
-                    "Please grant the location permission",
-                    1,
-                    *perms
-                )
-            }
-            GlobalState.isLocationPermissionRequested = true
-        }
-    }
-
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
+        code: Int, perm: Array<String?>, grants: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults,
-            this
-        )
+        super.onRequestPermissionsResult(code, perm, grants)
+        EasyPermissions.onRequestPermissionsResult(code, perm, grants, this)
     }
 
     private fun setupUIComponents() {

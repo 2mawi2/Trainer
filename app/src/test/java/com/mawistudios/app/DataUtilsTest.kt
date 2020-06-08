@@ -3,41 +3,41 @@ package com.mawistudios.app
 import com.mawistudios.data.local.Zone
 import com.mawistudios.data.local.TrainingInterval
 import com.mawistudios.data.local.TrainingProgram
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.*
 import org.junit.Test
 
 import org.junit.Assert.*
 import java.time.Duration
 
 class DataUtilsTest {
-    private fun getTrainingProgram(): TrainingProgram {
-        val hit = TrainingInterval(
-            duration = Duration.ofMinutes(10).toMillis(),
-            targetCadence = Zone(70.0, 80.0),
-            targetHearthRate = Zone(160.0, 190.0)
-        )
-        val endurance = TrainingInterval(
-            duration = Duration.ofMinutes(10).toMillis(),
-            targetCadence = Zone(60.0, 70.0),
-            targetHearthRate = Zone(120.0, 140.0)
-        )
-        return TrainingProgram(
-            intervals = listOf(endurance, hit, endurance)
-        )
+    @Test
+    fun `should calculate correct interval progress percentage`() {
+        val targetZone = Zone(min = 100.0, max = 200.0)
+        val measurement = 160.0
+
+        val result = calcIntervalProgressPercentage(targetZone, measurement)
+
+        assertThat(result).isEqualTo(60)
     }
 
     @Test
-    fun `should parse training program to graph format`() {
-        val trainingProgram = getTrainingProgram()
-        val expected = listOf(
-            listOf(Pair(0.0f, 140.0f), Pair(10.0f, 140.0f), Pair(10.0f, 190.0f)),
-            listOf(Pair(10.0f, 190.0f), Pair(20.0f, 190.0f), Pair(20.0f, 140.0f)),
-            listOf(Pair(20.0f, 140.0f), Pair(30.0f, 140.0f))
-        )
+    fun `should clip minimum`() {
+        val targetZone = Zone(min = 130.0, max = 150.0)
+        val measurement = 120.0
 
-        val result = trainingProgram.toGraphFormat()
+        val result = calcIntervalProgressPercentage(targetZone, measurement)
 
-        expected.zip(result).forEach {
-            assertArrayEquals(it.first.toTypedArray(), it.second.toTypedArray())
-        }
+        assertThat(result).isEqualTo(0)
+    }
+
+    @Test
+    fun `should clip maximum`() {
+        val targetZone = Zone(min = 130.0, max = 150.0)
+        val measurement = 160.0
+
+        val result = calcIntervalProgressPercentage(targetZone, measurement)
+
+        assertThat(result).isEqualTo(100)
     }
 }
