@@ -2,6 +2,8 @@ package com.mawistudios.app
 
 import android.content.Context
 import android.widget.Toast
+import com.mawistudios.data.local.Sensor
+import com.wahoofitness.connector.HardwareConnectorEnums
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -48,4 +50,16 @@ inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
         sum += selector(element)
     }
     return sum
+}
+
+fun HardwareConnectorEnums.SensorConnectionState.asString(): String = when (this) {
+    HardwareConnectorEnums.SensorConnectionState.DISCONNECTED -> "DISCONNECTED"
+    HardwareConnectorEnums.SensorConnectionState.CONNECTING -> "CONNECTING"
+    HardwareConnectorEnums.SensorConnectionState.CONNECTED -> "CONNECTED"
+    HardwareConnectorEnums.SensorConnectionState.DISCONNECTING -> "DISCONNECTING"
+}
+
+fun Sensor.resetState(): Sensor {
+    state = HardwareConnectorEnums.SensorConnectionState.DISCONNECTED.asString()
+    return this
 }

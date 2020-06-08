@@ -161,7 +161,7 @@ class TrainerViewModel(
         }
 
         override fun onDiscoveryStarted() {}
-        override fun onSensorConnectionStateChanged(deviceName: String, state: String) {}
+        override fun onSensorConnectionStateChanged(sensor: Sensor) {}
     }
 
     private fun updateHearthRateProgress(currentTime: Date, hearthRate: Double) {

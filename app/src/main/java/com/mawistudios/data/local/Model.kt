@@ -1,8 +1,10 @@
 package com.mawistudios.data.local
 
 import com.mawistudios.app.sumByLong
+import com.wahoofitness.connector.conn.connections.params.ConnectionParams
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import java.sql.Connection
 import java.time.Duration
 import java.util.*
 import kotlin.math.abs
@@ -12,8 +14,18 @@ import kotlin.math.abs
 data class Sensor(
     @Id var id: Long = 0,
     var state: String? = null,
-    var name: String
+    var name: String = "",
+    var params: String? = null
 ) {
+    fun setParameters(connectionParams: ConnectionParams) {
+        params = connectionParams.serialize()
+    }
+
+    fun getParameters(): ConnectionParams? {
+        if (params == null) return null
+        return ConnectionParams.deserialize(params)
+    }
+
     fun isConnected(): Boolean = this.state.equals("connected", true)
 }
 

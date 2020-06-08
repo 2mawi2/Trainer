@@ -1,8 +1,10 @@
 package com.mawistudios.data.hardware.sensors
 
 import com.mawistudios.TrainingSessionObservable
+import com.mawistudios.app.asString
 import com.mawistudios.app.log
 import com.mawistudios.data.local.ISensorDataRepo
+import com.mawistudios.data.local.Sensor
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionError
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionState
 import com.wahoofitness.connector.capabilities.Capability.CapabilityType
@@ -29,12 +31,7 @@ interface ISensorManager : SensorConnection.Listener {
 class SensorManager(
     private val sensorDataRepo: ISensorDataRepo
 ) : ISensorManager {
-    private fun SensorConnectionState.asString(): String = when (this) {
-        SensorConnectionState.DISCONNECTED -> "DISCONNECTED"
-        SensorConnectionState.CONNECTING -> "CONNECTING"
-        SensorConnectionState.CONNECTED -> "CONNECTED"
-        SensorConnectionState.DISCONNECTING -> "DISCONNECTING"
-    }
+
 
     override fun onSensorConnectionStateChanged(
         connection: SensorConnection,
@@ -43,8 +40,11 @@ class SensorManager(
         log("sensor connection state changed: ${connection.connectionParams.name} $state")
 
         TrainingSessionObservable.onSensorConnectionStateChanged(
-            connection.deviceName,
-            state.asString()
+            Sensor(
+                state = state.asString(),
+                name = connection.deviceName,
+                params = connection.connectionParams.serialize()
+            )
         )
     }
 

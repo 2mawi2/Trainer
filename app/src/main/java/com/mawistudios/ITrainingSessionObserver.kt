@@ -1,10 +1,11 @@
 package com.mawistudios
 
+import com.mawistudios.data.local.Sensor
+
 interface ITrainingSessionObserver {
     fun onTrainingDataChanged()
     fun onDiscoveryStarted()
     fun onSensorConnectionStateChanged(
-        deviceName: String,
-        state: String
+        sensor: Sensor
     )
 }

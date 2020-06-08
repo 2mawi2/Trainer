@@ -4,17 +4,29 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import com.mawistudios.app.log
 import com.mawistudios.data.hardware.HardwareManager
 import com.mawistudios.data.hardware.IHardwareManager
+import com.mawistudios.data.local.Sensor
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class SensorService : Service() {
     private val hardwareManager: IHardwareManager by inject { parametersOf(this) }
+    private var isDiscovering = false
 
-    fun startDiscovery() = hardwareManager.discover()
+    fun startDiscovery() {
+        log("Starting discovery")
+        hardwareManager.discover()
+        isDiscovering = true
+    }
 
-    fun stopDiscovering() = hardwareManager.stopDiscovering()
+    fun stopDiscovery() {
+        if (!isDiscovering) return
+        log("Stopping discovery")
+        hardwareManager.stopDiscovering()
+        isDiscovering = false
+    }
 
     inner class LocalBinder : Binder() {
         fun getService(): SensorService = this@SensorService
@@ -29,6 +41,10 @@ class SensorService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         hardwareManager.shutdown()
+    }
+
+    fun connectDevice(sensor: Sensor) {
+        hardwareManager.connectDevice(sensor)
     }
 
 }

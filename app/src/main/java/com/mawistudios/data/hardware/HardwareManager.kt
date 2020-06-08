@@ -6,9 +6,11 @@ import com.mawistudios.TrainingSessionObservable
 import com.mawistudios.app.log
 import com.mawistudios.data.hardware.DeviceManager
 import com.mawistudios.data.hardware.sensors.ISensorManager
+import com.mawistudios.data.local.Sensor
 import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.HardwareConnectorEnums
 import com.wahoofitness.connector.HardwareConnectorTypes
+import com.wahoofitness.connector.capabilities.Capability
 import com.wahoofitness.connector.conn.connections.SensorConnection
 import java.lang.Exception
 
@@ -16,6 +18,7 @@ interface IHardwareManager {
     fun discover()
     fun stopDiscovering()
     fun shutdown()
+    fun connectDevice(sensor: Sensor)
 }
 
 class HardwareManager constructor(
@@ -53,7 +56,7 @@ class HardwareManager constructor(
         override fun onFirmwareUpdateRequired(
             sensorConnection: SensorConnection, p1: String, p2: String
         ) {
-            //TODO("Handle Firmware update")
+            log("Firmware update required")
         }
     }
 
@@ -63,27 +66,28 @@ class HardwareManager constructor(
         discoveryListener = DeviceManager(connector, sensorManager)
     }
 
-    var discoveryStarted: Boolean = false
-    var discoveryRequested: Boolean = false
+    override fun connectDevice(sensor: Sensor) {
+        val params = sensor.getParameters()
+
+        if (params != null) {
+            connector.requestSensorConnection(params, sensorManager)
+            log("connecting sensor: ${sensor.name}")
+        } else {
+            log("sensor: ${sensor.name} could not be connected")
+        }
+    }
 
     override fun discover() {
-        discoveryRequested = true
         startDiscovering()
     }
 
     private fun startDiscovering() {
         connector.startDiscovery(discoveryListener)
-
-        discoveryStarted = true
-        discoveryRequested = false
-
         TrainingSessionObservable.onDiscoveryStarted()
     }
 
     override fun stopDiscovering() {
         connector.stopDiscovery(discoveryListener)
-        discoveryStarted = false
-        discoveryRequested = false
     }
 
     override fun shutdown() {

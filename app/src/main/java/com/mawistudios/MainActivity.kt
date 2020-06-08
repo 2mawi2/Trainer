@@ -10,14 +10,21 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.Button
 import android.widget.TextView
+import com.mawistudios.app.asString
 import com.mawistudios.app.log
+import com.mawistudios.app.resetState
+import com.mawistudios.data.local.ISensorRepo
 import com.mawistudios.data.local.Sensor
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
+import com.wahoofitness.connector.HardwareConnectorEnums
+import org.koin.android.ext.android.inject
 import pub.devrel.easypermissions.EasyPermissions
 
 
 class MainActivity : ListActivity() {
+    private val sensorRepo: ISensorRepo by inject()
+
     lateinit var adapter: SensorAdapter
     var discoveredSensors = ArrayList<Sensor>()
 
@@ -43,26 +50,26 @@ class MainActivity : ListActivity() {
     private fun setupUIComponents() {
         setContentView(layout.activity_main)
 
+        discoveredSensors.addAll(sensorRepo.all().map { it.resetState() })
+
         this.adapter = SensorAdapter(this, discoveredSensors)
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {
-            startDiscovery()
+            sensorRepo.all().forEach { sensorService.connectDevice(it) }
+            sensorService.startDiscovery()
         }
 
         findViewById<Button>(R.id.trainer_button).let {
             it.setOnClickListener {
                 log("Starting trainer")
+                sensorService.stopDiscovery()
                 startActivity(Intent(this, TrainerActivity::class.java))
             }
             it.isEnabled = false
         }
     }
 
-    private fun startDiscovery() {
-        log("Starting discovery")
-        sensorService.startDiscovery()
-    }
 
     private lateinit var sensorService: SensorService
     private val connection = object : ServiceConnection {
@@ -89,22 +96,18 @@ class MainActivity : ListActivity() {
             output("discovery started")
         }
 
-        override fun onSensorConnectionStateChanged(
-            deviceName: String,
-            state: String
-        ) {
-            addOrUpdateSensor(deviceName, state)
+        override fun onSensorConnectionStateChanged(sensor: Sensor) {
+            sensorRepo.addOrUpdate(sensor)
+            sensorRepo.all().forEach { updateDiscoveredSensors(it) }
             adapter.notifyDataSetChanged()
             updateTrainerButtonStatus()
         }
 
-        private fun addOrUpdateSensor(deviceName: String, state: String) {
-            if (discoveredSensors.any { it.name == deviceName }) {
-                discoveredSensors.firstOrNull { it.name == deviceName }?.state = state
+        private fun updateDiscoveredSensors(sensor: Sensor) {
+            if (discoveredSensors.any { it.name == sensor.name }) {
+                discoveredSensors.firstOrNull { it.name == sensor.name }?.state = sensor.state
             } else {
-                discoveredSensors.add(
-                    Sensor(name = deviceName, state = state)
-                )
+                discoveredSensors.add(sensor)
             }
         }
     }
@@ -136,3 +139,5 @@ class MainActivity : ListActivity() {
         findViewById<TextView>(R.id.info).text = text
     }
 }
+
+

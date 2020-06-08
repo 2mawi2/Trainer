@@ -9,6 +9,7 @@ interface IBaseRepo<T> {
     fun last(): T
     fun update(id: Long, operation: (entity: T) -> Unit): T
     fun get(id: Long): T
+    fun all(): List<T>
 }
 
 abstract class BaseRepo<T>(protected val box: Box<T>) : IBaseRepo<T> {
@@ -22,4 +23,5 @@ abstract class BaseRepo<T>(protected val box: Box<T>) : IBaseRepo<T> {
         return box.get(id)
     }
     override fun get(id: Long): T = box.get(id)
+    override fun all(): List<T> = box.all
 }
