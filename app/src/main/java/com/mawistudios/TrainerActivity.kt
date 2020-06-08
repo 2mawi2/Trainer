@@ -46,13 +46,19 @@ class TrainerActivity : AppCompatActivity() {
             }
         })
         viewModel.hearthRateProgress.observe(this, Observer {
-            GlobalScope.launch(Dispatchers.Main){
+            GlobalScope.launch(Dispatchers.Main) {
                 findViewById<ProgressBar>(R.id.hr_progress_bar).progress = it
+                findViewById<TextView>(R.id.hr_text).setTextColor(
+                    if (it > 95 || it < 5) Color.RED else Color.BLACK
+                )
             }
         })
         viewModel.cadenceProgress.observe(this, Observer {
-            GlobalScope.launch(Dispatchers.Main){
+            GlobalScope.launch(Dispatchers.Main) {
                 findViewById<ProgressBar>(R.id.rpm_progress_bar).progress = it
+                findViewById<TextView>(R.id.rpm_text).setTextColor(
+                    if (it > 95 || it < 5) Color.RED else Color.BLACK
+                )
             }
         })
         setContentView(R.layout.activity_trainer)

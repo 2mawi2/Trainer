@@ -34,6 +34,7 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="95dp"
                     android:text="Target HR"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -48,11 +49,13 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="130-150"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
             <RelativeLayout >
+
                 <TextView
                     android:id="@+id/hr_label"
                     android:layout_width="wrap_content"
@@ -62,6 +65,7 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="95dp"
                     android:text="HR"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -76,6 +80,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="130"
+                    android:textColor="@android:color/black"
                     android:textSize="70sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -113,6 +118,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="80-100"
+                    android:textColor="@android:color/black"
                     android:textSize="40sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -141,6 +147,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="100"
+                    android:textColor="@android:color/black"
                     android:textSize="70sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -157,6 +164,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
             <RelativeLayout>
+
                 <TextView
                     android:id="@+id/speed_label"
                     android:layout_width="wrap_content"
@@ -166,6 +174,7 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="95dp"
                     android:text="Speed"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -180,11 +189,13 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="45"
+                    android:textColor="@android:color/black"
                     android:textSize="70sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
             <RelativeLayout >
+
                 <TextView
                     android:id="@+id/interval_label"
                     android:layout_width="wrap_content"
@@ -194,6 +205,7 @@
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="95dp"
                     android:text="Interval"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -208,6 +220,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="24dp"
                     android:text="30"
+                    android:textColor="@android:color/black"
                     android:textSize="70sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

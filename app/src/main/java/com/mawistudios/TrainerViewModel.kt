@@ -170,7 +170,6 @@ class TrainerViewModel(
         hearthRateProgress.value = percentage
     }
 
-
     private fun updateCadenceProgress(currentTime: Date) {
         currentCadence()?.let { cadence ->
             val interval = currentInterval(currentTime)

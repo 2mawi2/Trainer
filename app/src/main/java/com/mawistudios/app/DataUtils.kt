@@ -53,9 +53,7 @@ fun calcIntervalProgressPercentage(
     measurement: Double
 ): Int {
     var achieved = measurement - targetZone.min
-
     achieved = achieved.coerceIn(0.0, targetZone.delta)
-
     val progress = (achieved / targetZone.delta) * 100
     return progress.roundToInt()
 }
