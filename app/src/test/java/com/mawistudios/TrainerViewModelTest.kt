@@ -1,12 +1,14 @@
 package com.mawistudios
 
+import com.mawistudios.app.ILogger
 import com.mawistudios.data.local.*
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions
-import org.junit.Before
+import org.assertj.core.api.Assertions.*
 import org.junit.Test
+import java.time.Duration
 
 import java.util.*
 
@@ -14,14 +16,18 @@ class TrainerViewModelTest {
     val sessionRepoMock = mock<ISessionRepo>()
     val sensorDataRepoMock = mock<ISensorDataRepo>()
     val athleteRepoMock = mock<IAthleteRepo>()
+    val loggerMock = mock<ILogger>()
 
     private fun createTrainerViewModel() = TrainerViewModel(
+        loggerMock,
         sessionRepoMock,
         athleteRepoMock,
         sensorDataRepoMock
     )
 
-    private fun setup(): Date {
+    private fun setup(
+
+    ): Date {
         val now = System.currentTimeMillis()
         val currentTime = Date(now + 15000)
         val startTime = Date(now)
@@ -48,7 +54,16 @@ class TrainerViewModelTest {
 
         val interval = createTrainerViewModel().currentInterval(currentTime)
 
-        Assertions.assertThat(interval.targetHearthRate.max).isEqualTo(130.0)
+        assertThat(interval.targetHearthRate.max).isEqualTo(130.0)
+    }
+
+    @Test
+    fun `should update current hearth rate progress`() {
+        val currentTime = setup()
+
+        val interval = createTrainerViewModel().currentInterval(currentTime)
+
+        assertThat(interval.targetHearthRate.max).isEqualTo(130.0)
     }
 
     @Test
@@ -57,6 +72,25 @@ class TrainerViewModelTest {
 
         val interval = createTrainerViewModel().currentInterval(null)
 
-        Assertions.assertThat(interval.targetHearthRate.max).isEqualTo(90.0)
+        assertThat(interval.targetHearthRate.max).isEqualTo(90.0)
     }
+
+    @Test
+    fun `should create new session on init`() {
+        setup()
+
+        createTrainerViewModel()
+
+        verify(sessionRepoMock).add(any())
+    }
+
+    @Test
+    fun `should calculate current duration`() {
+        val currentTime = setup()
+
+        val currentDuration = createTrainerViewModel().currentDuration(currentTime)
+
+        assertThat(currentDuration).isEqualTo(Duration.ofMillis(15000))
+    }
+
 }

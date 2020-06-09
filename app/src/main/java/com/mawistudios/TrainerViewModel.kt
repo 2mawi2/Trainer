@@ -3,8 +3,8 @@ package com.mawistudios
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
+import com.mawistudios.app.ILogger
 import com.mawistudios.app.calcIntervalProgressPercentage
-import com.mawistudios.app.log
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
 import java.time.Duration
@@ -13,6 +13,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 class TrainerViewModel(
+    private val logger: ILogger,
     private val sessionRepo: ISessionRepo,
     private val athleteRepo: IAthleteRepo,
     private val sensorDataRepo: ISensorDataRepo
@@ -119,8 +120,8 @@ class TrainerViewModel(
         }
 
         val currentMillis = currentDuration(currentTime).toMillis()
-        log("currentMillis: $currentMillis")
-        log("trainingProgram.intervals: ${trainingProgram.intervals.map { "${it.start} ${it.end}" }}")
+        logger.log("currentMillis: $currentMillis")
+        logger.log("trainingProgram.intervals: ${trainingProgram.intervals.map { "${it.start} ${it.end}" }}")
 
         return trainingProgram.intervals.first {
             currentMillis >= it.start && currentMillis < it.end
@@ -140,7 +141,7 @@ class TrainerViewModel(
     }
 
 
-    private val trainingSessionObserver = object : ITrainingSessionObserver {
+    public val trainingSessionObserver = object : ITrainingSessionObserver {
         override fun onTrainingDataChanged() {
             val hearthRateData = currentHearthRate()
             dashboardData.value = DashboardData(

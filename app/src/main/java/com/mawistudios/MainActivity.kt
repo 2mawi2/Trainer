@@ -26,9 +26,10 @@ class MainActivity : ListActivity() {
     private val sensorRepo: ISensorRepo by inject()
 
     lateinit var adapter: SensorAdapter
+
     var discoveredSensors = ArrayList<Sensor>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initKoin()

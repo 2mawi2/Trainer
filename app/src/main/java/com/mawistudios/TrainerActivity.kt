@@ -30,6 +30,7 @@ class TrainerActivity : AppCompatActivity() {
 
     private fun setupUI() {
         viewModel.dashboardData.observe(this, dashboardDataObserver)
+
         viewModel.targetCadence.observe(this, Observer {
             GlobalScope.launch(Dispatchers.Main) {
                 findViewById<TextView>(R.id.target_rpm_text).text = it
