@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Duration
 
 import java.util.*
@@ -26,17 +26,17 @@ class TrainerViewModelTest {
     )
 
     private fun setup(
-
     ): Date {
         val now = System.currentTimeMillis()
         val currentTime = Date(now + 15000)
         val startTime = Date(now)
         val endTime = Date(now + 20000)
-        val session = Session(
+        val mockedSession = Session(
             id = 1,
             startTime = startTime,
             endTime = endTime
         )
+
         val trainingProgram = TrainingProgram(
             listOf(
                 TrainingInterval(10000, Zone(70.0, 90.0), Zone(70.0, 90.0), 0, 10000),
@@ -44,17 +44,33 @@ class TrainerViewModelTest {
             )
         )
         whenever(athleteRepoMock.getTrainingProgram()).thenReturn(trainingProgram)
-        whenever(sessionRepoMock.get(any())).thenReturn(session)
+        whenever(sessionRepoMock.get(any())).thenReturn(mockedSession)
         return currentTime
     }
 
     @Test
-    fun `should find current interval`() {
-        val currentTime = setup()
+    fun `should reuse session if active exists`() {
+        val activeSession = Session(
+            id = 777,
+            startTime = Date(System.currentTimeMillis()),
+            endTime = null
+        )
+        whenever(sessionRepoMock.getLastActiveOrNull()).thenReturn(activeSession)
 
-        val interval = createTrainerViewModel().currentInterval(currentTime)
+        val viewModel = createTrainerViewModel()
 
-        assertThat(interval.targetHearthRate.max).isEqualTo(130.0)
+        assertThat(viewModel.session).isEqualTo(activeSession)
+    }
+
+    @Test
+    fun `should create new session if no active exists`() {
+        val newSession = Session()
+        whenever(sessionRepoMock.get(any())).thenReturn(newSession)
+        whenever(sessionRepoMock.getLastActiveOrNull()).thenReturn(null)
+
+        val viewModel = createTrainerViewModel()
+
+        assertThat(viewModel.session).isEqualTo(newSession)
     }
 
     @Test
@@ -92,5 +108,4 @@ class TrainerViewModelTest {
 
         assertThat(currentDuration).isEqualTo(Duration.ofMillis(15000))
     }
-
 }

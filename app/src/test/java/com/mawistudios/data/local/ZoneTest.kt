@@ -1,24 +1,30 @@
 package com.mawistudios.data.local
 
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
-import org.junit.Assert.*
-
+@Suppress("UsePropertyAccessSyntax")
 class ZoneTest {
 
-    @Test
-    fun `should match hearth rate`() {
-        assertTrue(Zone(0.0, 100.0).matches(0.00001))
-        assertTrue(Zone(0.0, 100.0).matches(100.0))
-        assertTrue(Zone(0.0, 100.0).matches(50.0))
-        assertTrue(Zone(0.0, 200.0).matches(200.0))
-
-        assertTrue(Zone(0.0, 132.84).matches(132.84))
-        assertTrue(Zone(0.0, 132.84).matches(132.84))
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "100.0, 0.00001",
+            "100.0, 100.0",
+            "100.0, 50.0",
+            "200.0, 200.0",
+            "132.84, 132.84",
+            "132.84, 132.84"
+        ]
+    )
+    fun `should match hearth rate`(max: Double, hearthRate: Double) {
+        assertThat(Zone(0.0, max).matches(hearthRate)).isTrue()
     }
 
     @Test
     fun `should format to string`() {
-        assertEquals("50-100", Zone(50.0, 100.0).toString())
+        assertThat(Zone(50.0, 100.0).toString()).isEqualTo("50-100")
     }
 }

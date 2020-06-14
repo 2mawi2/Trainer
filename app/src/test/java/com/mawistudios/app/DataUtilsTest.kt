@@ -1,14 +1,8 @@
 package com.mawistudios.app
 
 import com.mawistudios.data.local.Zone
-import com.mawistudios.data.local.TrainingInterval
-import com.mawistudios.data.local.TrainingProgram
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
-import org.junit.Test
-
-import org.junit.Assert.*
-import java.time.Duration
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class DataUtilsTest {
     @Test

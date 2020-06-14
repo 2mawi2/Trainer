@@ -51,6 +51,7 @@ data class Session(
 ) {
     fun hasStarted() = startTime != null
     fun hasEnded() = endTime != null
+    fun isActive() = hasStarted() && hasEnded().not()
 }
 
 fun areClose(first: Double, second: Double, precision: Double): Boolean {

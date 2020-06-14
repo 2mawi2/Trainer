@@ -18,7 +18,7 @@ class TrainerViewModel(
     private val athleteRepo: IAthleteRepo,
     private val sensorDataRepo: ISensorDataRepo
 ) : ViewModel() {
-    private var session: Session
+    var session: Session
     var hearthRateZones: List<Zone>
     var trainingProgram: TrainingProgram
 
@@ -33,8 +33,11 @@ class TrainerViewModel(
 
 
     init {
-        val id = sessionRepo.add(Session())
-        session = sessionRepo.get(id)
+        val recentlyActive = sessionRepo.getLastActiveOrNull()
+        session = if (recentlyActive != null) recentlyActive else {
+            val id = sessionRepo.add(Session())
+            sessionRepo.get(id)
+        }
         hearthRateZones = athleteRepo.getUserHearthRateZones()
         trainingProgram = athleteRepo.getTrainingProgram()
     }
@@ -141,7 +144,7 @@ class TrainerViewModel(
     }
 
 
-    public val trainingSessionObserver = object : ITrainingSessionObserver {
+    private val trainingSessionObserver = object : ITrainingSessionObserver {
         override fun onTrainingDataChanged() {
             val hearthRateData = currentHearthRate()
             dashboardData.value = DashboardData(
