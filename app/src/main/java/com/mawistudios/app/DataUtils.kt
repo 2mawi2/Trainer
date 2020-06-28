@@ -1,13 +1,13 @@
 package com.mawistudios.app
 
-import com.mawistudios.app.model.TrainingProgram
+import com.mawistudios.app.model.Workout
 import com.mawistudios.app.model.Zone
 import java.time.Duration
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
-fun TrainingProgram.toGraphFormat(): List<List<Pair<Float, Float>>> {
+fun Workout.toGraphFormat(): List<List<Pair<Float, Float>>> {
     var totalDuration: Duration = Duration.ZERO
     val graphDataPoints: MutableList<List<Pair<Float, Float>>> = mutableListOf()
 

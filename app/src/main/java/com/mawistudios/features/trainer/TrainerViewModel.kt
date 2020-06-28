@@ -19,11 +19,12 @@ class TrainerViewModel(
     private val logger: ILogger,
     private val sessionRepo: ISessionRepo,
     private val athleteRepo: IAthleteRepo,
+    private val workoutRepo: WorkoutRepo,
     private val sensorDataRepo: ISensorDataRepo
 ) : ViewModel() {
     var session: Session
     var hearthRateZones: List<Zone>
-    var trainingProgram: TrainingProgram
+    var workout: Workout
 
     val targetHearthRate: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val targetCadence: MutableLiveData<String> by lazy { MutableLiveData<String>() }
@@ -42,12 +43,12 @@ class TrainerViewModel(
             sessionRepo.get(id)
         }
         hearthRateZones = athleteRepo.getUserHearthRateZones()
-        trainingProgram = athleteRepo.getTrainingProgram()
+        workout = workoutRepo.getWorkout()
     }
 
 
     fun trainingProgramSets(): List<ArrayList<Entry>> {
-        return trainingProgram
+        return workout
             .toGraphFormat()
             .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
     }
@@ -97,7 +98,7 @@ class TrainerViewModel(
 
     //calculates passed session interval until now
     fun getPassedInterval(hearthRateData: SensorData): ArrayList<Entry> {
-        val passedIntervals = trainingProgram
+        val passedIntervals = workout
             .toGraphFormat()
             .map { ArrayList(it.map { p -> Entry(p.first, p.second) }) }
             .filter { isIntervalInThePast(hearthRateData, it) }
@@ -122,14 +123,14 @@ class TrainerViewModel(
 
     fun currentInterval(currentTime: Date?): TrainingInterval {
         if (currentTime == null || session.startTime == null) {
-            return trainingProgram.intervals.first()
+            return workout.intervals.first()
         }
 
         val currentMillis = currentDuration(currentTime).toMillis()
         logger.log("currentMillis: $currentMillis")
-        logger.log("trainingProgram.intervals: ${trainingProgram.intervals.map { "${it.start} ${it.end}" }}")
+        logger.log("trainingProgram.intervals: ${workout.intervals.map { "${it.start} ${it.end}" }}")
 
-        return trainingProgram.intervals.first {
+        return workout.intervals.first {
             currentMillis >= it.start && currentMillis < it.end
         }
     }

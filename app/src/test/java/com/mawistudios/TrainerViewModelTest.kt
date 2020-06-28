@@ -3,7 +3,7 @@ package com.mawistudios
 import com.mawistudios.app.ILogger
 import com.mawistudios.app.model.Session
 import com.mawistudios.app.model.TrainingInterval
-import com.mawistudios.app.model.TrainingProgram
+import com.mawistudios.app.model.Workout
 import com.mawistudios.app.model.Zone
 import com.mawistudios.data.local.*
 import com.mawistudios.features.trainer.TrainerViewModel
@@ -43,7 +43,7 @@ class TrainerViewModelTest {
             endTime = endTime
         )
 
-        val trainingProgram = TrainingProgram(
+        val trainingProgram = Workout(
             listOf(
                 TrainingInterval(
                     10000,

@@ -1,4 +1,4 @@
-package com.mawistudios.data.hardware
+package com.mawistudios
 
 import android.content.Context
 import android.graphics.Color

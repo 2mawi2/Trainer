@@ -13,12 +13,11 @@ import android.widget.TextView
 import com.mawistudios.app.log
 import com.mawistudios.app.resetState
 import com.mawistudios.data.hardware.ITrainingSessionObserver
-import com.mawistudios.data.hardware.SensorAdapter
 import com.mawistudios.data.hardware.SensorService
 import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.data.local.ISensorRepo
 import com.mawistudios.app.model.Sensor
-import com.mawistudios.features.trainingplan.TrainingPlanActivity
+import com.mawistudios.features.workout.WorkoutActivity
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
 import org.koin.android.ext.android.inject
@@ -69,7 +68,7 @@ class MainActivity : ListActivity() {
             it.setOnClickListener {
                 log("Starting trainer")
                 sensorService.stopDiscovery()
-                startActivity(Intent(this, TrainingPlanActivity::class.java))
+                startActivity(Intent(this, WorkoutActivity::class.java))
             }
             it.isEnabled = false
         }

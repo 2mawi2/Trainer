@@ -1,45 +1,13 @@
 package com.mawistudios.data.local
 
-import com.mawistudios.app.log
-import com.mawistudios.app.model.TrainingInterval
-import com.mawistudios.app.model.TrainingProgram
 import com.mawistudios.app.model.Zone
-import java.time.Duration
-
-
-
-
 
 
 interface IAthleteRepo {
     fun getUserHearthRateZones(): List<Zone>
-    fun getTrainingProgram(): TrainingProgram
 }
 
 class AthleteRepo : IAthleteRepo {
-    override fun getTrainingProgram(): TrainingProgram {
-        val targetCadence = Zone(70.0, 80.0)
-
-        var intervalStart: Long = 0
-        val hearthRateZones = getUserHearthRateZones()
-        val intervals =
-            (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).toList().map {
-                val duration = Duration.ofSeconds(60).toMillis()
-                val intervalEnd = intervalStart + duration
-                val interval = TrainingInterval(
-                    start = intervalStart,
-                    end = intervalEnd,
-                    duration = duration,
-                    targetCadence = targetCadence,
-                    targetHearthRate = it
-                )
-                intervalStart = intervalEnd
-                interval
-            }
-        intervals.forEach { log(it.toString()) }
-        return TrainingProgram(intervals = intervals)
-    }
-
     override fun getUserHearthRateZones(): List<Zone> {
         val threshold = 164.0
         return listOf(

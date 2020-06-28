@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.mawistudios.features.trainingplan.TrainingPlanActivity"></activity>
+        <activity android:name="com.mawistudios.features.workout.WorkoutActivity"></activity>
         <activity android:name="com.mawistudios.features.trainer.TrainerActivity" />
 
         <service

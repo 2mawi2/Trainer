@@ -85,9 +85,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:6294662061291656529",
+      "lastPropertyId": "3:685334278049470945",
+      "name": "Workout",
+      "properties": [
+        {
+          "id": "1:1604859836683068463",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6488371688509346029",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:685334278049470945",
+          "name": "createdDate",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:3435543711459851212",
+  "lastEntityId": "5:6294662061291656529",
   "lastIndexId": "2:2071205838434536309",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
