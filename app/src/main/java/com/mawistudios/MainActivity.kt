@@ -10,14 +10,17 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.Button
 import android.widget.TextView
-import com.mawistudios.app.asString
 import com.mawistudios.app.log
 import com.mawistudios.app.resetState
+import com.mawistudios.data.hardware.ITrainingSessionObserver
+import com.mawistudios.data.hardware.SensorAdapter
+import com.mawistudios.data.hardware.SensorService
+import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.data.local.ISensorRepo
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
+import com.mawistudios.features.trainingplan.TrainingPlanActivity
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
-import com.wahoofitness.connector.HardwareConnectorEnums
 import org.koin.android.ext.android.inject
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -53,7 +56,8 @@ class MainActivity : ListActivity() {
 
         discoveredSensors.addAll(sensorRepo.all().map { it.resetState() })
 
-        this.adapter = SensorAdapter(this, discoveredSensors)
+        this.adapter =
+            SensorAdapter(this, discoveredSensors)
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {
@@ -65,7 +69,7 @@ class MainActivity : ListActivity() {
             it.setOnClickListener {
                 log("Starting trainer")
                 sensorService.stopDiscovery()
-                startActivity(Intent(this, TrainerActivity::class.java))
+                startActivity(Intent(this, TrainingPlanActivity::class.java))
             }
             it.isEnabled = false
         }
@@ -90,7 +94,8 @@ class MainActivity : ListActivity() {
         findViewById<Button>(R.id.trainer_button).isEnabled = isAtLeastOneSensorActive
     }
 
-    private val trainingSessionObserver = object : ITrainingSessionObserver {
+    private val trainingSessionObserver = object :
+        ITrainingSessionObserver {
         override fun onTrainingDataChanged() {}
 
         override fun onDiscoveryStarted() {

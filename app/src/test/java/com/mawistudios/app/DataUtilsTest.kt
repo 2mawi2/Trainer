@@ -1,6 +1,6 @@
 package com.mawistudios.app
 
-import com.mawistudios.data.local.Zone
+import com.mawistudios.app.model.Zone
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

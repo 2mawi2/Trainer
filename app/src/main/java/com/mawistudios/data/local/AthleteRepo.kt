@@ -1,7 +1,14 @@
 package com.mawistudios.data.local
 
 import com.mawistudios.app.log
+import com.mawistudios.app.model.TrainingInterval
+import com.mawistudios.app.model.TrainingProgram
+import com.mawistudios.app.model.Zone
 import java.time.Duration
+
+
+
+
 
 
 interface IAthleteRepo {

@@ -1,10 +1,13 @@
-package com.mawistudios
+package com.mawistudios.features.trainer
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.Entry
+import com.mawistudios.data.hardware.ITrainingSessionObserver
+import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.app.ILogger
 import com.mawistudios.app.calcIntervalProgressPercentage
+import com.mawistudios.app.model.*
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
 import java.time.Duration
@@ -144,7 +147,8 @@ class TrainerViewModel(
     }
 
 
-    private val trainingSessionObserver = object : ITrainingSessionObserver {
+    private val trainingSessionObserver = object :
+        ITrainingSessionObserver {
         override fun onTrainingDataChanged() {
             val hearthRateData = currentHearthRate()
             dashboardData.value = DashboardData(
@@ -184,10 +188,14 @@ class TrainerViewModel(
     }
 
     fun onStart() {
-        TrainingSessionObservable.register(trainingSessionObserver)
+        TrainingSessionObservable.register(
+            trainingSessionObserver
+        )
     }
 
     fun onStop() {
-        TrainingSessionObservable.unRegister(trainingSessionObserver)
+        TrainingSessionObservable.unRegister(
+            trainingSessionObserver
+        )
     }
 }

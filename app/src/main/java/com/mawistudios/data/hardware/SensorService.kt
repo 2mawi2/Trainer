@@ -1,13 +1,11 @@
-package com.mawistudios
+package com.mawistudios.data.hardware
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.mawistudios.app.log
-import com.mawistudios.data.hardware.HardwareManager
-import com.mawistudios.data.hardware.IHardwareManager
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 

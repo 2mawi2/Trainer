@@ -1,4 +1,4 @@
-package com.mawistudios
+package com.mawistudios.data.hardware
 
 import android.content.Context
 import android.graphics.Color
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 import com.mawistudios.trainer.R
 
 class SensorAdapter(

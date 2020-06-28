@@ -2,14 +2,20 @@ package com.mawistudios.app
 
 import android.content.Context
 import android.widget.Toast
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 import com.wahoofitness.connector.HardwareConnectorEnums
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URI
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlin.math.abs
+
+
+fun areClose(first: Double, second: Double, precision: Double): Boolean {
+    val distance = abs(first - second)
+    return distance <= precision
+}
+
 
 object GlobalState {
     var isKoinInitialized = false

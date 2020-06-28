@@ -1,10 +1,10 @@
 package com.mawistudios.data.hardware.sensors
 
-import com.mawistudios.TrainingSessionObservable
+import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.app.asString
 import com.mawistudios.app.log
 import com.mawistudios.data.local.ISensorDataRepo
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionError
 import com.wahoofitness.connector.HardwareConnectorEnums.SensorConnectionState
 import com.wahoofitness.connector.capabilities.Capability.CapabilityType

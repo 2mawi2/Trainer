@@ -1,6 +1,6 @@
-package com.mawistudios
+package com.mawistudios.data.hardware
 
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 
 interface ITrainingSessionObserver {
     fun onTrainingDataChanged()

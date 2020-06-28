@@ -1,6 +1,7 @@
 package com.mawistudios.data.local
 
 import android.content.Context
+import com.mawistudios.app.model.MyObjectBox
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id

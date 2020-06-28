@@ -1,4 +1,4 @@
-package com.mawistudios
+package com.mawistudios.features.trainer
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,7 +11,8 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.mawistudios.data.local.*
+import com.mawistudios.app.model.SensorData
+import com.mawistudios.app.model.Zone
 import com.mawistudios.trainer.R
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject

@@ -1,7 +1,12 @@
 package com.mawistudios
 
 import com.mawistudios.app.ILogger
+import com.mawistudios.app.model.Session
+import com.mawistudios.app.model.TrainingInterval
+import com.mawistudios.app.model.TrainingProgram
+import com.mawistudios.app.model.Zone
 import com.mawistudios.data.local.*
+import com.mawistudios.features.trainer.TrainerViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -18,12 +23,13 @@ class TrainerViewModelTest {
     val athleteRepoMock = mock<IAthleteRepo>()
     val loggerMock = mock<ILogger>()
 
-    private fun createTrainerViewModel() = TrainerViewModel(
-        loggerMock,
-        sessionRepoMock,
-        athleteRepoMock,
-        sensorDataRepoMock
-    )
+    private fun createTrainerViewModel() =
+        TrainerViewModel(
+            loggerMock,
+            sessionRepoMock,
+            athleteRepoMock,
+            sensorDataRepoMock
+        )
 
     private fun setup(
     ): Date {
@@ -39,8 +45,20 @@ class TrainerViewModelTest {
 
         val trainingProgram = TrainingProgram(
             listOf(
-                TrainingInterval(10000, Zone(70.0, 90.0), Zone(70.0, 90.0), 0, 10000),
-                TrainingInterval(10000, Zone(70.0, 90.0), Zone(90.0, 130.0), 10000, 20000)
+                TrainingInterval(
+                    10000,
+                    Zone(70.0, 90.0),
+                    Zone(70.0, 90.0),
+                    0,
+                    10000
+                ),
+                TrainingInterval(
+                    10000,
+                    Zone(70.0, 90.0),
+                    Zone(90.0, 130.0),
+                    10000,
+                    20000
+                )
             )
         )
         whenever(athleteRepoMock.getTrainingProgram()).thenReturn(trainingProgram)

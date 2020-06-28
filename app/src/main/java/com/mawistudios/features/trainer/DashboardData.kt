@@ -1,6 +1,6 @@
-package com.mawistudios.data.local
+package com.mawistudios.features.trainer
 
-import com.mawistudios.data.local.SensorData
+import com.mawistudios.app.model.SensorData
 
 data class DashboardData(
     var hearthRate: SensorData?,

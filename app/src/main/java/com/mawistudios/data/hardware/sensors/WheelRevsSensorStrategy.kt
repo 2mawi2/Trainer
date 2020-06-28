@@ -1,11 +1,10 @@
 package com.mawistudios.data.hardware.sensors
 
-import com.mawistudios.TrainingSessionObservable
+import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.app.log
-import com.mawistudios.data.local.DataPointType
+import com.mawistudios.app.model.DataPointType
 import com.mawistudios.data.local.ISensorDataRepo
-import com.mawistudios.data.local.SensorData
-import com.mawistudios.data.local.SensorDataRepo
+import com.mawistudios.app.model.SensorData
 import com.wahoofitness.connector.capabilities.Capability
 import com.wahoofitness.connector.capabilities.WheelRevs
 import com.wahoofitness.connector.conn.connections.SensorConnection

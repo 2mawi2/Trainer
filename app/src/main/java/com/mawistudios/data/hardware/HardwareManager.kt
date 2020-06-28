@@ -1,18 +1,13 @@
 package com.mawistudios.data.hardware
 
 import android.content.Context
-import com.mawistudios.SensorService
-import com.mawistudios.TrainingSessionObservable
 import com.mawistudios.app.log
-import com.mawistudios.data.hardware.DeviceManager
 import com.mawistudios.data.hardware.sensors.ISensorManager
-import com.mawistudios.data.local.Sensor
+import com.mawistudios.app.model.Sensor
 import com.wahoofitness.connector.HardwareConnector
 import com.wahoofitness.connector.HardwareConnectorEnums
 import com.wahoofitness.connector.HardwareConnectorTypes
-import com.wahoofitness.connector.capabilities.Capability
 import com.wahoofitness.connector.conn.connections.SensorConnection
-import java.lang.Exception
 
 interface IHardwareManager {
     fun discover()

@@ -1,5 +1,6 @@
 package com.mawistudios.data.local
 
+import com.mawistudios.app.model.Zone
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

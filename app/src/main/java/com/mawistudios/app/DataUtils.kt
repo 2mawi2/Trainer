@@ -1,13 +1,9 @@
 package com.mawistudios.app
 
-import com.github.mikephil.charting.data.Entry
-import com.mawistudios.data.local.TrainingInterval
-import com.mawistudios.data.local.TrainingProgram
-import com.mawistudios.data.local.Zone
+import com.mawistudios.app.model.TrainingProgram
+import com.mawistudios.app.model.Zone
 import java.time.Duration
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 

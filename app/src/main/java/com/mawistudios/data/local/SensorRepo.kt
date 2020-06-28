@@ -1,5 +1,7 @@
 package com.mawistudios.data.local
 
+import com.mawistudios.app.model.Sensor
+import com.mawistudios.app.model.Sensor_
 import io.objectbox.kotlin.boxFor
 import io.objectbox.kotlin.query
 

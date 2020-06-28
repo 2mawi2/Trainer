@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Trainer</string>
     <string name="discover_btn">Discover</string>
-    <string name="trainer_btn">Start Trainer</string>
+    <string name="trainer_btn">Select Training Plan</string>
 </resources>
