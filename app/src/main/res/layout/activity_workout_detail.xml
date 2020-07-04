@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,21 +18,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.197"
-        tools:text="Workout 1" />
+        app:layout_constraintVertical_bias="0.02"
+        tools:text="Edit Workout" />
 
-    <TextView
-        android:id="@+id/workout_date"
+    <EditText
+        android:id="@+id/workout_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="workout name"
+        app:layout_constraintTop_toBottomOf="@+id/workout_name" />
+
+    <Button
+        android:id="@+id/update_workout_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
-        android:textSize="23sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Update Workout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387"
-        tools:text="19/05/1993" />
+        app:layout_constraintTop_tBottomOf="@+id/list_workouts"
+        app:layout_constraintTop_toBottomOf="@+id/workout_name_input"></Button>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,18 +3,11 @@ package com.mawistudios.features.workout
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.mawistudios.app.model.Workout
-import com.mawistudios.data.hardware.SensorService
+import com.mawistudios.app.toast
 import com.mawistudios.features.workout.detail.WorkoutDetailActivity
 import com.mawistudios.trainer.R
 import kotlinx.android.synthetic.main.activity_workout.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 
@@ -27,6 +20,11 @@ class WorkoutActivity : AppCompatActivity() {
         setupUIComponents()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateLiveData()
+    }
+
     private fun setupUIComponents() {
         setContentView(R.layout.activity_workout)
 
@@ -36,7 +34,10 @@ class WorkoutActivity : AppCompatActivity() {
 
         if (!::workoutAdapter.isInitialized) {
             workoutAdapter = WorkoutAdapter(
-                onClickRemove = { viewModel.removeWorkout(it) },
+                onClickRemove = {
+                    viewModel.removeWorkout(it)
+                    toast(this, "Workout deleted!")
+                },
                 onClickModify = { workout ->
                     val intent = Intent(this, WorkoutDetailActivity::class.java)
                     intent.putExtra("workoutId", workout.id)

@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.2.5'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
     implementation 'androidx.room:room-ktx:2.2.5'
     implementation "io.objectbox:objectbox-android:2.5.1"

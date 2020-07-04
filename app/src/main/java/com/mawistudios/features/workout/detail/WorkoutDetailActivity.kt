@@ -1,11 +1,13 @@
 package com.mawistudios.features.workout.detail
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.mawistudios.app.model.Workout
+import com.mawistudios.app.toast
+import com.mawistudios.features.workout.WorkoutActivity
 import com.mawistudios.trainer.R
-import kotlinx.android.synthetic.main.list_item_workout.*
+import kotlinx.android.synthetic.main.activity_workout_detail.*
 import org.koin.android.ext.android.inject
 
 
@@ -23,8 +25,14 @@ class WorkoutDetailActivity : AppCompatActivity() {
     private fun setupUIComponents() {
         setContentView(R.layout.activity_workout_detail)
         viewModel.workout.observe(this, Observer {
-            workout_name.text = it.name
-            workout_name.text = it.formatedCreatedDate
+            workout_name_input.setText(it.name)
         })
+        update_workout_btn.setOnClickListener {
+            viewModel.saveForm(
+                formName = workout_name_input.text.toString()
+            )
+            toast(this, "Workout updated!")
+            startActivity(Intent(this, WorkoutActivity::class.java))
+        }
     }
 }

@@ -12,10 +12,10 @@ class WorkoutViewModel(
     val workouts: MutableLiveData<List<Workout>> by lazy { MutableLiveData<List<Workout>>() }
 
     init {
-        updateWorkouts()
+        updateLiveData()
     }
 
-    fun updateWorkouts() {
+    fun updateLiveData() {
         workouts.value = workoutRepo.all().sortedBy { it.createdDate }
     }
 
@@ -28,11 +28,11 @@ class WorkoutViewModel(
 
     fun addWorkout(workoutPlaceholder: Workout) {
         workoutRepo.save(workoutPlaceholder)
-        updateWorkouts()
+        updateLiveData()
     }
 
     fun removeWorkout(workout: Workout) {
         workoutRepo.remove(workout.id)
-        updateWorkouts()
+        updateLiveData()
     }
 }
