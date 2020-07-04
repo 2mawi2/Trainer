@@ -26,21 +26,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:hint="workout name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="workout name"
         app:layout_constraintTop_toBottomOf="@+id/workout_name" />
 
     <Button
         android:id="@+id/update_workout_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:text="Update Workout"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_tBottomOf="@+id/list_workouts"
         app:layout_constraintTop_toBottomOf="@+id/workout_name_input"></Button>
 
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workout_name_input"></Button>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

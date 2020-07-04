@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.mawistudios.MainActivity
 import com.mawistudios.app.toast
 import com.mawistudios.features.workout.WorkoutActivity
 import com.mawistudios.trainer.R
@@ -22,6 +23,12 @@ class WorkoutDetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, WorkoutActivity::class.java))
+    }
+
+
     private fun setupUIComponents() {
         setContentView(R.layout.activity_workout_detail)
         viewModel.workout.observe(this, Observer {
@@ -32,6 +39,9 @@ class WorkoutDetailActivity : AppCompatActivity() {
                 formName = workout_name_input.text.toString()
             )
             toast(this, "Workout updated!")
+            startActivity(Intent(this, WorkoutActivity::class.java))
+        }
+        cancel_btn.setOnClickListener {
             startActivity(Intent(this, WorkoutActivity::class.java))
         }
     }

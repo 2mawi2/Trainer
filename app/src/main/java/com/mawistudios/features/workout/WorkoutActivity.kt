@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.mawistudios.MainActivity
 import com.mawistudios.app.toast
 import com.mawistudios.features.workout.detail.WorkoutDetailActivity
 import com.mawistudios.trainer.R
@@ -23,6 +24,11 @@ class WorkoutActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.updateLiveData()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     private fun setupUIComponents() {
