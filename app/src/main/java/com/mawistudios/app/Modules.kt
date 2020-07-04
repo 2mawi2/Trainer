@@ -8,6 +8,7 @@ import com.mawistudios.data.hardware.sensors.ISensorManager
 import com.mawistudios.data.hardware.sensors.SensorManager
 import com.mawistudios.data.local.*
 import com.mawistudios.features.workout.WorkoutViewModel
+import com.mawistudios.features.workout.detail.WorkoutDetailViewModel
 import org.koin.dsl.module
 
 val appModule = module {
@@ -21,6 +22,7 @@ val appModule = module {
 
     factory { TrainerViewModel(get(), get(), get(), get(), get()) }
     factory { WorkoutViewModel(get()) }
+    factory { WorkoutDetailViewModel(get()) }
 
     factory { (context: Context) -> HardwareManager(context, get()) as IHardwareManager }
 }

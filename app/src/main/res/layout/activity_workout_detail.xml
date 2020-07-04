@@ -3,51 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="70dp">
+    android:layout_height="match_parent"
+    tools:context="com.mawistudios.features.workout.WorkoutActivity">
 
     <TextView
         android:id="@+id/workout_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
         android:textSize="23sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/workout_date"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.197"
         tools:text="Workout 1" />
 
     <TextView
         android:id="@+id/workout_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
         android:textSize="23sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/remove_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="19/05/1993" />
-
-    <Button
-        android:id="@+id/remove_btn"
-        android:layout_width="44dp"
-        android:layout_height="49dp"
-        android:layout_marginEnd="5dp"
-        android:text="X"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/modify_btn"
-        app:layout_constraintTop_toTopOf="parent"></Button>
-
-    <Button
-        android:id="@+id/modify_btn"
-        android:layout_width="44dp"
-        android:layout_height="49dp"
-        android:text="M"
-        android:layout_margin="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.387"
+        tools:text="19/05/1993" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

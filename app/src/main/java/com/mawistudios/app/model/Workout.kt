@@ -5,6 +5,7 @@ import com.mawistudios.app.sumByLong
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDate
 import java.util.*
@@ -17,4 +18,7 @@ data class Workout(
     var createdDate: Date
 ) : Serializable {
     fun totalDuration(): Duration = Duration.ofMillis(intervals.sumByLong { it.duration })
+    val formatedCreatedDate: String
+        get() = SimpleDateFormat("dd/MM/yyyy").format(createdDate)
 }
+

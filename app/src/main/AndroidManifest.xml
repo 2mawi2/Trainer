@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.mawistudios.features.workout.WorkoutActivity"></activity>
+        <activity android:name="com.mawistudios.features.workout.detail.WorkoutDetailActivity"></activity>
         <activity android:name="com.mawistudios.features.trainer.TrainerActivity" />
 
         <service
