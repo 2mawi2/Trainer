@@ -11,19 +11,10 @@ interface ISensorDataRepo : IBaseRepo<SensorData> {
     fun currentDistance(): SensorData?
     fun currentSpeed(): SensorData?
     fun currentCadence(): SensorData?
+    fun currentPower(): SensorData?
 }
 
 class SensorDataRepo : BaseRepo<SensorData>(ObjectBox.boxStore.boxFor()), ISensorDataRepo {
-    private fun queryByDataPoint(dataPointType: String): Query<SensorData> {
-        return box.query().run {
-            equal(
-                SensorData_.dataPointType,
-                dataPointType
-            )
-            orderDesc(SensorData_.time)
-        }.build()
-    }
-
     override fun currentHearthRate(): SensorData? {
         return queryByDataPoint(DataPointType.HEARTHRATE_BPM.name).findFirst()
     }
@@ -38,5 +29,19 @@ class SensorDataRepo : BaseRepo<SensorData>(ObjectBox.boxStore.boxFor()), ISenso
 
     override fun currentCadence(): SensorData? {
         return queryByDataPoint(DataPointType.CRANKREVS_CADENCE.name).findFirst()
+    }
+
+    override fun currentPower(): SensorData? {
+        return queryByDataPoint(DataPointType.POWER_WATT.name).findFirst()
+    }
+
+    private fun queryByDataPoint(dataPointType: String): Query<SensorData> {
+        return box.query().run {
+            equal(
+                SensorData_.dataPointType,
+                dataPointType
+            )
+            orderDesc(SensorData_.time)
+        }.build()
     }
 }

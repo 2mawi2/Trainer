@@ -63,6 +63,7 @@ class SensorManager(
             CapabilityType.Heartrate -> HearthRateSensorStrategy(sensorDataRepo)
             CapabilityType.WheelRevs -> WheelRevsSensorStrategy(sensorDataRepo)
             CapabilityType.CrankRevs -> CrankRevsSensorStrategy(sensorDataRepo)
+            CapabilityType.BikePower -> BikePowerStrategy(sensorDataRepo)
             else -> UnknownSensorStrategy()
         }.handleData(connection)
     }
