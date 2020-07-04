@@ -55,8 +55,7 @@ class MainActivity : ListActivity() {
 
         discoveredSensors.addAll(sensorRepo.all().map { it.resetState() })
 
-        this.adapter =
-            SensorAdapter(this, discoveredSensors)
+        this.adapter =  SensorAdapter(this, discoveredSensors)
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {

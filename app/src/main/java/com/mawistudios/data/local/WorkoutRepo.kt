@@ -1,17 +1,15 @@
 package com.mawistudios.data.local
 
+import com.mawistudios.app.model.Sensor
 import com.mawistudios.app.model.Workout
+import com.mawistudios.app.model.Workout_
 import io.objectbox.kotlin.boxFor
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
+import io.objectbox.kotlin.query
 
 
-interface IWorkoutRepo {
+interface IWorkoutRepo: IBaseRepo<Workout> {
     fun getWorkout(): Workout
-    fun getWorkouts(): List<Workout>
 }
-
 
 class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo {
     override fun getWorkout(): Workout {
@@ -36,14 +34,5 @@ class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo
         //    }
         //intervals.forEach { log(it.toString()) }
         //return TrainingPlan(intervals = intervals)
-    }
-
-    override fun getWorkouts(): List<Workout> {
-        return listOf(
-            Workout(
-                name = "Workout 1",
-                createdDate = Calendar.getInstance().time
-            )
-        )
     }
 }

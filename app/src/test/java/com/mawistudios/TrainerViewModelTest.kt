@@ -115,7 +115,7 @@ class TrainerViewModelTest {
 
         createTrainerViewModel()
 
-        verify(sessionRepoMock).add(any())
+        verify(sessionRepoMock).save(any())
     }
 
     @Test

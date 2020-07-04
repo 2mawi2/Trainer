@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.mawistudios.app.model.Sensor
@@ -39,7 +40,6 @@ class SensorAdapter(
         backgroundImage.setBackgroundColor(
             if (isSensorConnected(sensor)) context.getColor(R.color.colorAccent) else Color.WHITE
         )
-
         return rowView
     }
 

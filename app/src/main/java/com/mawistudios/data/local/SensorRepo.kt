@@ -21,7 +21,7 @@ class SensorRepo : BaseRepo<Sensor>(ObjectBox.boxStore.boxFor()), ISensorRepo {
                 it.params = sensor.params
             }
         } else {
-            add(sensor)
+            save(sensor)
         }
     }
 }

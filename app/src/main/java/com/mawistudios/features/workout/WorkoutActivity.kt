@@ -2,10 +2,13 @@ package com.mawistudios.features.workout
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mawistudios.app.model.Workout
 import com.mawistudios.trainer.R
+import kotlinx.android.synthetic.main.activity_workout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,13 +27,11 @@ class WorkoutActivity : AppCompatActivity() {
     private fun setupUIComponents() {
         setContentView(R.layout.activity_workout)
         viewModel.workouts.observe(this, Observer { workouts ->
-            GlobalScope.launch(Dispatchers.Main) {
-                workoutAdapter = WorkoutAdapter(workouts)
-                val view = findViewById<RecyclerView>(R.id.list_workouts)
-                view.adapter = workoutAdapter
-                workoutAdapter.notifyDataSetChanged()
-            }
+            workoutAdapter.submitList(workouts)
         })
-        viewModel.updateWorkouts()
+        if (!::workoutAdapter.isInitialized) {
+            workoutAdapter = WorkoutAdapter()
+        }
+        list_workouts.adapter = workoutAdapter
     }
 }

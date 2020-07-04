@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.mawistudios.trainer"
-        minSdkVersion 26
+        minSdkVersion 28
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -46,6 +46,7 @@ dependencies {
     implementation project(path: ':wahoo_fitness_android_api_1.8.2.0')
     implementation 'androidx.room:room-runtime:2.2.5'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
     implementation 'androidx.room:room-ktx:2.2.5'
     implementation "io.objectbox:objectbox-android:2.5.1"

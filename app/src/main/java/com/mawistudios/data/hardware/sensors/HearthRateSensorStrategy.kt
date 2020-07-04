@@ -19,7 +19,7 @@ class HearthRateSensorStrategy(val sensorDataRepo: ISensorDataRepo) : ICapabilit
         hearthRate.addListener(object : Heartrate.Listener {
             override fun onHeartrateData(data: Heartrate.Data) {
                 log(data.toString())
-                sensorDataRepo.add(
+                sensorDataRepo.save(
                     SensorData(
                         dataPoint = data.heartrate.asEventsPerMinute(),
                         time = Date(data.timeMs),

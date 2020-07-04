@@ -23,7 +23,7 @@ class WheelRevsSensorStrategy(val sensorDataRepo: ISensorDataRepo) : ICapability
             val bikeSpeedKMH = data.wheelSpeed.asRpm() * 60 * wheelCircumference / 1000
             val totalBikeDistanceM = data.wheelRevs * wheelCircumference
 
-            sensorDataRepo.add(
+            sensorDataRepo.save(
                 SensorData(
                     dataPoint = bikeSpeedKMH,
                     time = Date(data.timeMs),

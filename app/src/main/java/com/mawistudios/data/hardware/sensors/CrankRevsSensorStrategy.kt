@@ -18,7 +18,7 @@ class CrankRevsSensorStrategy(
             connection.getCurrentCapability(Capability.CapabilityType.CrankRevs) as CrankRevs
         crackRevs.addListener { data ->
             log(data.toString())
-            sensorDataRepo.add(
+            sensorDataRepo.save(
                 SensorData(
                     dataPoint = data.crankSpeed.asRpm(),
                     time = Date(data.timeMs),

@@ -39,7 +39,7 @@ class TrainerViewModel(
     init {
         val recentlyActive = sessionRepo.getLastActiveOrNull()
         session = if (recentlyActive != null) recentlyActive else {
-            val id = sessionRepo.add(Session())
+            val id = sessionRepo.save(Session())
             sessionRepo.get(id)
         }
         hearthRateZones = athleteRepo.getUserHearthRateZones()

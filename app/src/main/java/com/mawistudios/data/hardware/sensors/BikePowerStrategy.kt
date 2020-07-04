@@ -7,7 +7,6 @@ import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.data.local.ISensorDataRepo
 import com.wahoofitness.connector.capabilities.BikePower
 import com.wahoofitness.connector.capabilities.Capability
-import com.wahoofitness.connector.capabilities.Heartrate
 import com.wahoofitness.connector.conn.connections.SensorConnection
 import java.util.*
 
@@ -18,7 +17,7 @@ class BikePowerStrategy(private val sensorDataRepo: ISensorDataRepo) : ICapabili
 
         hearthRate.addListener { data ->
             log(data.toString())
-            sensorDataRepo.add(
+            sensorDataRepo.save(
                 SensorData(
                     dataPoint = data.powerWatts,
                     time = Date(data.timeMs),

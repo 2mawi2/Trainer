@@ -15,6 +15,6 @@ class WorkoutViewModel(
     }
 
     fun updateWorkouts() {
-        workouts.value = workoutRepo.getWorkouts()
+        workouts.value = workoutRepo.all()
     }
 }
