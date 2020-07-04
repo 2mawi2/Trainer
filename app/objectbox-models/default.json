@@ -108,12 +108,50 @@
           "type": 10
         }
       ],
+      "relations": [
+        {
+          "id": "1:2263987615811721828",
+          "name": "intervals",
+          "targetId": "6:4706929609206549867"
+        }
+      ]
+    },
+    {
+      "id": "6:4706929609206549867",
+      "lastPropertyId": "4:4311503314397126912",
+      "name": "Interval",
+      "properties": [
+        {
+          "id": "1:1488204531416910533",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3290302971299324103",
+          "name": "duration",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "3:3292640412177728060",
+          "name": "start",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "4:4311503314397126912",
+          "name": "end",
+          "type": 6,
+          "flags": 4
+        }
+      ],
       "relations": []
     }
   ],
-  "lastEntityId": "5:6294662061291656529",
+  "lastEntityId": "6:4706929609206549867",
   "lastIndexId": "2:2071205838434536309",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:2263987615811721828",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

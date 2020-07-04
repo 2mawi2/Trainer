@@ -10,6 +10,7 @@ import com.mawistudios.app.calcIntervalProgressPercentage
 import com.mawistudios.app.model.*
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
+import java.lang.Error
 import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,7 +20,7 @@ class TrainerViewModel(
     private val logger: ILogger,
     private val sessionRepo: ISessionRepo,
     private val athleteRepo: IAthleteRepo,
-    private val workoutRepo: WorkoutRepo,
+    private val workoutRepo: IWorkoutRepo,
     private val sensorDataRepo: ISensorDataRepo
 ) : ViewModel() {
     var session: Session
@@ -121,16 +122,19 @@ class TrainerViewModel(
         targetCadence.value = currentInterval.targetCadence.toString()
     }
 
-    fun currentInterval(currentTime: Date?): TrainingInterval {
+    fun currentInterval(currentTime: Date?): Interval {
+        var intervals = workout.intervals
+        if (intervals == null) throw Error("no intervals")
+
         if (currentTime == null || session.startTime == null) {
-            return workout.intervals.first()
+            return intervals.first()
         }
 
         val currentMillis = currentDuration(currentTime).toMillis()
         logger.log("currentMillis: $currentMillis")
-        logger.log("trainingProgram.intervals: ${workout.intervals.map { "${it.start} ${it.end}" }}")
+        logger.log("trainingProgram.intervals: ${intervals.map { "${it.start} ${it.end}" }}")
 
-        return workout.intervals.first {
+        return intervals.first {
             currentMillis >= it.start && currentMillis < it.end
         }
     }

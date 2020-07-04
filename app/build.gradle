@@ -74,6 +74,7 @@ dependencies {
     testImplementation 'androidx.room:room-testing:2.2.5'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation "io.objectbox:objectbox-macos:2.5.1"
 
     testImplementation 'org.robolectric:robolectric:4.3'
 

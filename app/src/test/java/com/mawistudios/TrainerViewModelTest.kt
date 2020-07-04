@@ -1,25 +1,27 @@
 package com.mawistudios
 
 import com.mawistudios.app.ILogger
-import com.mawistudios.app.model.Session
-import com.mawistudios.app.model.TrainingInterval
-import com.mawistudios.app.model.Workout
-import com.mawistudios.app.model.Zone
-import com.mawistudios.data.local.*
+import com.mawistudios.app.model.*
+import com.mawistudios.data.local.IAthleteRepo
+import com.mawistudios.data.local.ISensorDataRepo
+import com.mawistudios.data.local.ISessionRepo
+import com.mawistudios.data.local.IWorkoutRepo
 import com.mawistudios.features.trainer.TrainerViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import org.assertj.core.api.Assertions.*
+import io.objectbox.relation.ToMany
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Duration
-
 import java.util.*
+
 
 class TrainerViewModelTest {
     val sessionRepoMock = mock<ISessionRepo>()
     val sensorDataRepoMock = mock<ISensorDataRepo>()
+    val workoutRepoMock = mock<IWorkoutRepo>()
     val athleteRepoMock = mock<IAthleteRepo>()
     val loggerMock = mock<ILogger>()
 
@@ -28,6 +30,7 @@ class TrainerViewModelTest {
             loggerMock,
             sessionRepoMock,
             athleteRepoMock,
+            workoutRepoMock,
             sensorDataRepoMock
         )
 
@@ -43,25 +46,31 @@ class TrainerViewModelTest {
             endTime = endTime
         )
 
-        val trainingProgram = Workout(
-            listOf(
-                TrainingInterval(
-                    10000,
-                    Zone(70.0, 90.0),
-                    Zone(70.0, 90.0),
-                    0,
-                    10000
-                ),
-                TrainingInterval(
-                    10000,
-                    Zone(70.0, 90.0),
-                    Zone(90.0, 130.0),
-                    10000,
-                    20000
+        val createdDate = Calendar.getInstance().time
+        val workout = Workout(name = "Workout 1", createdDate = createdDate).apply {
+            intervals = ToMany(this, Workout_.intervals)
+            intervals.addAll(
+                listOf(
+                    Interval(
+                        10000,
+                        10000,
+                        Zone(70.0, 90.0),
+                        Zone(70.0, 90.0),
+                        0,
+                        10000
+                    ),
+                    Interval(
+                        10000,
+                        10000,
+                        Zone(70.0, 90.0),
+                        Zone(90.0, 130.0),
+                        10000,
+                        20000
+                    )
                 )
             )
-        )
-        whenever(athleteRepoMock.getTrainingProgram()).thenReturn(trainingProgram)
+        }
+        whenever(workoutRepoMock.getWorkout()).thenReturn(workout)
         whenever(sessionRepoMock.get(any())).thenReturn(mockedSession)
         return currentTime
     }
