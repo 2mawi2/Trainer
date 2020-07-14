@@ -108,17 +108,11 @@
           "type": 10
         }
       ],
-      "relations": [
-        {
-          "id": "1:2263987615811721828",
-          "name": "intervals",
-          "targetId": "6:4706929609206549867"
-        }
-      ]
+      "relations": []
     },
     {
       "id": "6:4706929609206549867",
-      "lastPropertyId": "4:4311503314397126912",
+      "lastPropertyId": "5:5842148236919922949",
       "name": "Interval",
       "properties": [
         {
@@ -144,13 +138,21 @@
           "name": "end",
           "type": 6,
           "flags": 4
+        },
+        {
+          "id": "5:5842148236919922949",
+          "name": "workoutId",
+          "indexId": "3:499727089160447580",
+          "type": 11,
+          "flags": 524,
+          "relationTarget": "Workout"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "6:4706929609206549867",
-  "lastIndexId": "2:2071205838434536309",
+  "lastIndexId": "3:499727089160447580",
   "lastRelationId": "1:2263987615811721828",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -171,6 +173,8 @@
     9140956324410472700,
     5000463223297012449
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    2263987615811721828
+  ],
   "version": 1
 }

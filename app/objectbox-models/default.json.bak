@@ -109,11 +109,51 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:4706929609206549867",
+      "lastPropertyId": "5:5842148236919922949",
+      "name": "Interval",
+      "properties": [
+        {
+          "id": "1:1488204531416910533",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3290302971299324103",
+          "name": "duration",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "3:3292640412177728060",
+          "name": "start",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "4:4311503314397126912",
+          "name": "end",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "5:5842148236919922949",
+          "name": "workoutId",
+          "indexId": "3:499727089160447580",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "Workout"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:6294662061291656529",
-  "lastIndexId": "2:2071205838434536309",
-  "lastRelationId": "0:0",
+  "lastEntityId": "6:4706929609206549867",
+  "lastIndexId": "3:499727089160447580",
+  "lastRelationId": "1:2263987615811721828",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -133,6 +173,8 @@
     9140956324410472700,
     5000463223297012449
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    2263987615811721828
+  ],
   "version": 1
 }

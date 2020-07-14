@@ -10,34 +10,32 @@ import kotlin.math.roundToInt
 fun Workout.toGraphFormat(): List<List<Pair<Float, Float>>> {
     var totalDuration: Duration = Duration.ZERO
     val graphDataPoints: MutableList<List<Pair<Float, Float>>> = mutableListOf()
-    this.intervals?.let {
-        it.indices.map { i ->
-            val intervalData: ArrayList<Pair<Float, Float>> = arrayListOf()
+    intervals.indices.map { i ->
+        val intervalData: ArrayList<Pair<Float, Float>> = arrayListOf()
+        intervalData.add(
+            Pair(
+                totalDuration.toMillis().toFloat(),
+                intervals[i].targetHearthRate.max.toFloat()
+            )
+        )
+        totalDuration = totalDuration.plusMillis(intervals[i].duration)
+        intervalData.add(
+            Pair(
+                totalDuration.toMillis().toFloat(),
+                intervals[i].targetHearthRate.max.toFloat()
+            )
+        )
+
+        if (intervals.indices.contains(i + 1)) {
             intervalData.add(
                 Pair(
                     totalDuration.toMillis().toFloat(),
-                    it[i].targetHearthRate.max.toFloat()
+                    intervals[i + 1].targetHearthRate.max.toFloat()
                 )
             )
-            totalDuration = totalDuration.plusMillis(it[i].duration)
-            intervalData.add(
-                Pair(
-                    totalDuration.toMillis().toFloat(),
-                    it[i].targetHearthRate.max.toFloat()
-                )
-            )
-
-            if (it.indices.contains(i + 1)) {
-                intervalData.add(
-                    Pair(
-                        totalDuration.toMillis().toFloat(),
-                        it[i + 1].targetHearthRate.max.toFloat()
-                    )
-                )
-            }
-
-            graphDataPoints.add(intervalData)
         }
+
+        graphDataPoints.add(intervalData)
     }
 
     return graphDataPoints

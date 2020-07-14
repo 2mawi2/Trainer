@@ -1,5 +1,6 @@
 package com.mawistudios.app
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import com.mawistudios.app.model.Sensor
@@ -42,8 +43,8 @@ fun appendQueryParam(uri: String, queryParam: String): URI {
 
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
-fun toast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+fun Activity.toast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
 suspend fun <T> asyncIO(block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO) {

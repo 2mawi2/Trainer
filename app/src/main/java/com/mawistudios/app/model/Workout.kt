@@ -1,6 +1,7 @@
 package com.mawistudios.app.model
 
 import com.mawistudios.app.sumByLong
+import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
@@ -15,9 +16,10 @@ data class Workout(
     var name: String,
     var createdDate: Date
 ) : Serializable {
+    @Backlink(to = "workout")
     lateinit var intervals: ToMany<Interval>
-    fun totalDuration(): Duration = Duration.ofMillis(intervals?.sumByLong { it.duration } ?: 0)
+    fun totalDuration(): Duration = Duration.ofMillis(intervals.sumByLong { it.duration })
     val formatedCreatedDate: String
-        get() = SimpleDateFormat("dd/MM/yyyy").format(createdDate)
+        get() = SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY).format(createdDate)
 }
 

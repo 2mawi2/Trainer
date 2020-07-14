@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.objectbox'
 
 
 android {
@@ -34,6 +35,10 @@ android {
             includeAndroidResources = true
         }
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 
@@ -50,9 +55,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
     implementation 'androidx.room:room-ktx:2.2.5'
-    implementation "io.objectbox:objectbox-android:2.5.1"
-    kapt "io.objectbox:objectbox-processor:2.5.1"
-    implementation "io.objectbox:objectbox-kotlin:2.5.1"
+    implementation "io.objectbox:objectbox-android:$object_box_version"
+    kapt "io.objectbox:objectbox-processor:$object_box_version"
+    implementation "io.objectbox:objectbox-kotlin:$object_box_version"
     implementation 'com.mysugr.MPAndroidChart:MPAndroidChart:3.1.0-mysugr-1'
     implementation 'pub.devrel:easypermissions:3.0.0'
 
@@ -74,7 +79,7 @@ dependencies {
     testImplementation 'androidx.room:room-testing:2.2.5'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.assertj:assertj-core:3.11.1"
-    testImplementation "io.objectbox:objectbox-macos:2.5.1"
+    testImplementation "io.objectbox:objectbox-macos:$object_box_version"
 
     testImplementation 'org.robolectric:robolectric:4.3'
 

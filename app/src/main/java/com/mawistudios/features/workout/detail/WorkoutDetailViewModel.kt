@@ -2,32 +2,48 @@ package com.mawistudios.features.workout.detail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mawistudios.app.model.Interval
 import com.mawistudios.app.model.Workout
+import com.mawistudios.app.model.Zone
 import com.mawistudios.data.local.IWorkoutRepo
 
 class WorkoutDetailViewModel(
     private val workoutRepo: IWorkoutRepo
 ) : ViewModel() {
     val workout: MutableLiveData<Workout> by lazy { MutableLiveData<Workout>() }
+    val intervals: MutableLiveData<MutableList<Interval>> by lazy { MutableLiveData<MutableList<Interval>>() }
+    private var workoutId: Long? = null
 
     fun setWorkout(workoutId: Long) {
-        workout.value = workoutRepo.get(workoutId)
+        this.workoutId = workoutId
+        updateLiveData()
     }
 
-    fun saveForm(formName: String) {
-        val updatedWorkout = workout.value
+    fun updateLiveData() {
+        workout.value = workoutId?.let { workoutRepo.get(it) }
+        intervals.value = workout.value!!.intervals
+    }
 
-        updatedWorkout?.let {
-
-            updatedWorkout.name = formName
-
-            workout.value = updatedWorkout
-            workoutRepo.save(updatedWorkout)
+    fun removeInterval(interval: Interval) {
+        workoutId?.let {
+            workoutRepo.removeInterval(it, interval)
             updateLiveData()
         }
     }
 
-    private fun updateLiveData() {
-        workout.value = workout.value?.id?.let { workoutRepo.get(it) }
+    fun addIntervalPlaceholder() {
+        workoutId?.let {
+            workoutRepo.addInterval(
+                it, Interval(
+                    duration = 200,
+                    targetCadence = Zone(0.0, 0.0),
+                    targetHearthRate = Zone(0.0, 0.0)
+                )
+            )
+            updateLiveData()
+        }
+    }
+
+    fun addLoopPlaceholder() {
     }
 }

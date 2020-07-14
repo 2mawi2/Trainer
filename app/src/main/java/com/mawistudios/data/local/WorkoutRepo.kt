@@ -1,14 +1,13 @@
 package com.mawistudios.data.local
 
-import com.mawistudios.app.model.Sensor
+import com.mawistudios.app.model.Interval
 import com.mawistudios.app.model.Workout
-import com.mawistudios.app.model.Workout_
 import io.objectbox.kotlin.boxFor
-import io.objectbox.kotlin.query
 
-
-interface IWorkoutRepo: IBaseRepo<Workout> {
+interface IWorkoutRepo : IBaseRepo<Workout> {
     fun getWorkout(): Workout
+    fun addInterval(workoutId: Long, interval: Interval)
+    fun removeInterval(workoutId: Long, intervalId: Interval)
 }
 
 class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo {
@@ -34,5 +33,25 @@ class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo
         //    }
         //intervals.forEach { log(it.toString()) }
         //return TrainingPlan(intervals = intervals)
+    }
+
+    override fun addInterval(workoutId: Long, interval: Interval) {
+        interval.id = 0
+        val workout = box.get(workoutId)
+        box.attach(workout)
+        workout.intervals.add(interval)
+        workout.intervals.applyChangesToDb()
+    }
+
+    override fun removeInterval(workoutId: Long, interval: Interval) {
+        val workout = box.get(workoutId)
+        box.attach(workout)
+
+        val intBox = ObjectBox.boxStore.boxFor<Interval>()
+        val int = intBox.get(interval.id)
+        intBox.attach(int)
+
+        workout.intervals.remove(int)
+        intBox.remove(int)
     }
 }

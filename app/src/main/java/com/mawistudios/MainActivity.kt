@@ -55,7 +55,7 @@ class MainActivity : ListActivity() {
 
         discoveredSensors.addAll(sensorRepo.all().map { it.resetState() })
 
-        this.adapter =  SensorAdapter(this, discoveredSensors)
+        this.adapter = SensorAdapter(this, discoveredSensors)
         listAdapter = this.adapter
 
         findViewById<Button>(R.id.discoverButton).setOnClickListener {
@@ -69,7 +69,7 @@ class MainActivity : ListActivity() {
                 sensorService.stopDiscovery()
                 startActivity(Intent(this, WorkoutActivity::class.java))
             }
-            it.isEnabled = false
+            // it.isEnabled = false // TODO add
         }
     }
 
@@ -88,7 +88,8 @@ class MainActivity : ListActivity() {
     }
 
     fun updateTrainerButtonStatus() {
-        val isAtLeastOneSensorActive = discoveredSensors.any { it.isConnected() }
+        var isAtLeastOneSensorActive = discoveredSensors.any { it.isConnected() }
+        isAtLeastOneSensorActive = true // TODO remove
         findViewById<Button>(R.id.trainer_button).isEnabled = isAtLeastOneSensorActive
     }
 

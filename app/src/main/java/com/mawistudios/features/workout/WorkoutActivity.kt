@@ -42,7 +42,7 @@ class WorkoutActivity : AppCompatActivity() {
             workoutAdapter = WorkoutAdapter(
                 onClickRemove = {
                     viewModel.removeWorkout(it)
-                    toast(this, "Workout deleted!")
+                    toast("Workout deleted!")
                 },
                 onClickModify = { workout ->
                     val intent = Intent(this, WorkoutDetailActivity::class.java)
