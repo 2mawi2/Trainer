@@ -11,6 +11,7 @@ interface IBaseRepo<T> {
     fun get(id: Long): T
     fun all(): List<T>
     fun remove(id: Long): Boolean
+    fun remove(entitiy: T): Boolean
 }
 
 abstract class BaseRepo<T>(protected val box: Box<T>) : IBaseRepo<T> {
@@ -27,4 +28,5 @@ abstract class BaseRepo<T>(protected val box: Box<T>) : IBaseRepo<T> {
     override fun get(id: Long): T = box.get(id)
     override fun all(): List<T> = box.all
     override fun remove(id: Long): Boolean = box.remove(id)
+    override fun remove(entitiy: T): Boolean = box.remove(entitiy)
 }

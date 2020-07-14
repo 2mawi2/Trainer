@@ -10,7 +10,9 @@ interface IWorkoutRepo : IBaseRepo<Workout> {
     fun removeInterval(workoutId: Long, intervalId: Interval)
 }
 
-class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo {
+class WorkoutRepo(
+    private val intervalRepo: IIntervalRepo
+) : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo {
     override fun getWorkout(): Workout {
         TODO()
         //val targetCadence = Zone(70.0, 80.0)
@@ -46,12 +48,7 @@ class WorkoutRepo : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo
     override fun removeInterval(workoutId: Long, interval: Interval) {
         val workout = box.get(workoutId)
         box.attach(workout)
-
-        val intBox = ObjectBox.boxStore.boxFor<Interval>()
-        val int = intBox.get(interval.id)
-        intBox.attach(int)
-
-        workout.intervals.remove(int)
-        intBox.remove(int)
+        workout.intervals.remove(interval)
+        intervalRepo.remove(interval)
     }
 }

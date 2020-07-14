@@ -16,7 +16,7 @@ val appModule = module {
     single { SensorRepo() as ISensorRepo }
     single { SensorDataRepo() as ISensorDataRepo }
     single { AthleteRepo() as IAthleteRepo }
-    single { WorkoutRepo() as IWorkoutRepo }
+    single { WorkoutRepo(get()) as IWorkoutRepo }
     single { IntervalRepo() as IIntervalRepo }
     single { Logger() as ILogger }
     factory { SensorManager(get()) as ISensorManager }
