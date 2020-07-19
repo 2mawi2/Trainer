@@ -6,17 +6,21 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.mawistudios.app.log
+import com.mawistudios.app.model.Sensor
 import com.mawistudios.app.resetState
 import com.mawistudios.data.hardware.ITrainingSessionObserver
 import com.mawistudios.data.hardware.SensorService
 import com.mawistudios.data.hardware.TrainingSessionObservable
 import com.mawistudios.data.local.ISensorRepo
-import com.mawistudios.app.model.Sensor
 import com.mawistudios.features.workout.WorkoutActivity
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
@@ -142,6 +146,11 @@ class MainActivity : ListActivity() {
 
     fun output(text: String) {
         findViewById<TextView>(R.id.info).text = text
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        newConfig.orientation = ORIENTATION_PORTRAIT
+        super.onConfigurationChanged(newConfig)
     }
 }
 
