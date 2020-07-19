@@ -8,20 +8,21 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.Configuration
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.IBinder
+import android.util.AttributeSet
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import com.mawistudios.app.log
 import com.mawistudios.app.model.Sensor
 import com.mawistudios.app.resetState
 import com.mawistudios.data.hardware.ITrainingSessionObserver
 import com.mawistudios.data.hardware.SensorService
 import com.mawistudios.data.hardware.TrainingSessionObservable
-import com.mawistudios.data.local.ISensorRepo
+import com.mawistudios.features.ISensorRepo
 import com.mawistudios.features.workout.WorkoutActivity
+import com.mawistudios.features.zone.ZoneActivity
 import com.mawistudios.trainer.R
 import com.mawistudios.trainer.R.layout
 import org.koin.android.ext.android.inject
@@ -47,6 +48,10 @@ class MainActivity : ListActivity() {
         log("Application started")
     }
 
+    override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
+        return super.onCreateView(name, context, attrs)
+    }
+
     override fun onRequestPermissionsResult(
         code: Int, perm: Array<String?>, grants: IntArray
     ) {
@@ -69,11 +74,17 @@ class MainActivity : ListActivity() {
 
         findViewById<Button>(R.id.trainer_button).let {
             it.setOnClickListener {
-                log("Starting trainer")
                 sensorService.stopDiscovery()
                 startActivity(Intent(this, WorkoutActivity::class.java))
             }
             // it.isEnabled = false // TODO add
+        }
+
+        findViewById<Button>(R.id.zone_button).let {
+            it.setOnClickListener {
+                sensorService.stopDiscovery()
+                startActivity(Intent(this, ZoneActivity::class.java))
+            }
         }
     }
 

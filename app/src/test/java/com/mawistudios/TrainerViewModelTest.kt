@@ -2,10 +2,10 @@ package com.mawistudios
 
 import com.mawistudios.app.ILogger
 import com.mawistudios.app.model.*
-import com.mawistudios.data.local.IAthleteRepo
+import com.mawistudios.features.trainer.IAthleteRepo
 import com.mawistudios.data.local.ISensorDataRepo
-import com.mawistudios.data.local.ISessionRepo
-import com.mawistudios.data.local.IWorkoutRepo
+import com.mawistudios.features.trainer.ISessionRepo
+import com.mawistudios.features.workout.IWorkoutRepo
 import com.mawistudios.features.trainer.TrainerViewModel
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock

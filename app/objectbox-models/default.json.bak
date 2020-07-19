@@ -144,7 +144,7 @@
           "name": "workoutId",
           "indexId": "3:499727089160447580",
           "type": 11,
-          "flags": 1548,
+          "flags": 524,
           "relationTarget": "Workout"
         }
       ],

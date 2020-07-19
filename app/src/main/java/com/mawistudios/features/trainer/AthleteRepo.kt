@@ -1,4 +1,4 @@
-package com.mawistudios.data.local
+package com.mawistudios.features.trainer
 
 import com.mawistudios.app.model.Zone
 

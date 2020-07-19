@@ -1,12 +1,16 @@
 package com.mawistudios.app.model
 
 import com.mawistudios.app.areClose
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
 
+@Entity
 data class Zone(
     var min: Double,
     var max: Double,
     var name: String = "",
-    var index: Int = 0
+    var index: Int = 0,
+    @Id var id: Long = 0
 ) {
     val delta: Double = Math.abs(max - min)
 

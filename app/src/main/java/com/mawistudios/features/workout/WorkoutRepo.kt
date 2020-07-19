@@ -1,7 +1,11 @@
-package com.mawistudios.data.local
+package com.mawistudios.features.workout
 
 import com.mawistudios.app.model.Interval
 import com.mawistudios.app.model.Workout
+import com.mawistudios.data.local.BaseRepo
+import com.mawistudios.data.local.IBaseRepo
+import com.mawistudios.features.trainer.IIntervalRepo
+import com.mawistudios.data.local.ObjectBox
 import io.objectbox.kotlin.boxFor
 
 interface IWorkoutRepo : IBaseRepo<Workout> {
@@ -12,7 +16,8 @@ interface IWorkoutRepo : IBaseRepo<Workout> {
 
 class WorkoutRepo(
     private val intervalRepo: IIntervalRepo
-) : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()), IWorkoutRepo {
+) : BaseRepo<Workout>(ObjectBox.boxStore.boxFor()),
+    IWorkoutRepo {
     override fun getWorkout(): Workout {
         TODO()
         //val targetCadence = Zone(70.0, 80.0)

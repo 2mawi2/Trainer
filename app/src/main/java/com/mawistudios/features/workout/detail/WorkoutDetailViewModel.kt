@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.mawistudios.app.model.Interval
 import com.mawistudios.app.model.Workout
 import com.mawistudios.app.model.Zone
-import com.mawistudios.data.local.IWorkoutRepo
+import com.mawistudios.features.workout.IWorkoutRepo
 
 class WorkoutDetailViewModel(
     private val workoutRepo: IWorkoutRepo

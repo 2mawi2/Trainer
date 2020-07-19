@@ -10,6 +10,7 @@ import com.mawistudios.app.calcIntervalProgressPercentage
 import com.mawistudios.app.model.*
 import com.mawistudios.app.toGraphFormat
 import com.mawistudios.data.local.*
+import com.mawistudios.features.workout.IWorkoutRepo
 import java.lang.Error
 import java.time.Duration
 import java.util.*

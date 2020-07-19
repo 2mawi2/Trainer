@@ -2,9 +2,11 @@ package com.mawistudios
 
 import android.Manifest
 import android.widget.Toast
-import com.mawistudios.app.GlobalState
-import com.mawistudios.app.appModule
+import com.mawistudios.app.*
 import com.mawistudios.data.local.ObjectBox
+import com.mawistudios.features.trainer.trainerModule
+import com.mawistudios.features.workout.workoutModule
+import com.mawistudios.features.zone.zoneModule
 import org.koin.core.context.startKoin
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -39,7 +41,12 @@ fun initKoin() {
     if (!GlobalState.isKoinInitialized) {
         startKoin {
             printLogger()
-            modules(appModule)
+            modules(
+                appModule,
+                workoutModule,
+                trainerModule,
+                zoneModule
+            )
         }
         GlobalState.isKoinInitialized = true
     }
