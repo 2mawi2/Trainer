@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mawistudios.app.format
 import com.mawistudios.app.model.Zone
 import com.mawistudios.trainer.R
 import kotlinx.android.synthetic.main.list_item_zone.view.*
@@ -23,10 +24,7 @@ class ZoneItem(
     }
 }
 
-class ZoneAdapter(
-    private val onClickRemove: (Zone) -> Unit,
-    private val onClickModify: (Zone) -> Unit
-) : ListAdapter<Zone, ZoneAdapter.ZoneViewHolder>(DIFF_CALLBACK) {
+class ZoneAdapter() : ListAdapter<Zone, ZoneAdapter.ZoneViewHolder>(DIFF_CALLBACK) {
 
     override fun onBindViewHolder(holder: ZoneViewHolder, position: Int) {
         getItem(position)?.let { holder.setupView(it) }
@@ -34,20 +32,18 @@ class ZoneAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ZoneViewHolder {
         val item = ZoneItem(parent.context)
-        return ZoneViewHolder(item, onClickRemove, onClickModify)
+        return ZoneViewHolder(item)
     }
 
     override fun getItemViewType(position: Int): Int = 0
 
     class ZoneViewHolder(
-        zoneItem: ZoneItem,
-        private val onClickRemove: (Zone) -> Unit,
-        private val onClickModify: (Zone) -> Unit
+        zoneItem: ZoneItem
     ) : RecyclerView.ViewHolder(zoneItem) {
         fun setupView(zone: Zone) {
             itemView.zone_name.text = zone.name
-            itemView.remove_btn.setOnClickListener { this.onClickRemove(zone) }
-            itemView.modify_btn.setOnClickListener { this.onClickModify(zone) }
+            itemView.zone_min.text = zone.min.format(0)
+            itemView.zone_max.text = zone.max.format(0)
         }
     }
 

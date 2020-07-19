@@ -6,6 +6,51 @@
     android:layout_height="match_parent"
     tools:context="com.mawistudios.features.zone.ZoneActivity">
 
+    <TextView
+        android:id="@+id/ftp_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="32dp"
+        android:text="FTP:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/ftp_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@+id/ftp_text"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="166"></com.google.android.material.textfield.TextInputEditText>
+
+    <Button
+        android:id="@+id/calculate_zones_btn"
+        android:text="Calculate Zones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginStart="189dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ftp_edit_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/power_zones_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Power Zones:"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ftp_edit_text" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_zones"
         android:layout_width="match_parent"
@@ -18,20 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/add_zone_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="81dp"
-        android:layout_marginBottom="76dp"
-        android:text="Add Zone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_zones"
-        app:layout_constraintVertical_bias="1.0"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/power_zones_heading" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

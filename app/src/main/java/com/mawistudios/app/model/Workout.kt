@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
+
 @Entity
 data class Workout(
     @Id var id: Long = 0,

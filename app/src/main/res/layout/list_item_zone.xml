@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="70dp">
+    android:layout_height="70dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/zone_name"
@@ -12,39 +12,43 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_margin="20dp"
-        android:textSize="18sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Zone 1" />
+        tools:text="ANEROBIC CAPACITY" />
 
     <TextView
-        android:id="@+id/zone_date"
+        android:id="@+id/zone_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:textSize="18sp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/zone_name"
-        tools:text="19/05/1993" />
+        tools:text="120.0" />
 
-    <Button
-        android:id="@+id/remove_btn"
-        android:layout_width="44dp"
-        android:layout_height="49dp"
-        android:layout_margin="20dp"
-        android:text="X"
+    <TextView
+        android:id="@+id/dash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/zone_date"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        app:layout_constraintStart_toEndOf="@+id/zone_min"
+        android:text=" - "/>
 
-    <Button
-        android:id="@+id/modify_btn"
-        android:layout_width="44dp"
-        android:layout_height="49dp"
-        android:layout_margin="10dp"
-        android:text="M"
+    <TextView
+        android:id="@+id/zone_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/remove_btn"></Button>
+        app:layout_constraintStart_toEndOf="@+id/dash"
+        tools:text="170.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
