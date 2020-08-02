@@ -20,6 +20,7 @@
         <activity android:name="com.mawistudios.features.zone.ZoneActivity"></activity>
         <activity android:name="com.mawistudios.features.workout.WorkoutActivity"></activity>
         <activity android:name="com.mawistudios.features.workout.detail.WorkoutDetailActivity"></activity>
+        <activity android:name="com.mawistudios.features.workout.detail.interval.IntervalDetailActivity"></activity>
         <activity android:name="com.mawistudios.features.trainer.TrainerActivity" />
 
         <service

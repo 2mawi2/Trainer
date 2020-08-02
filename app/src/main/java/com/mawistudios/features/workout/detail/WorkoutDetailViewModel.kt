@@ -6,6 +6,7 @@ import com.mawistudios.app.model.Interval
 import com.mawistudios.app.model.Workout
 import com.mawistudios.app.model.Zone
 import com.mawistudios.features.workout.IWorkoutRepo
+import kotlinx.android.synthetic.main.activity_workout_detail.*
 
 class WorkoutDetailViewModel(
     private val workoutRepo: IWorkoutRepo
@@ -38,7 +39,8 @@ class WorkoutDetailViewModel(
                     name = "Interval ${(intervals.value?.count() ?: 0) + 1}",
                     duration = 200,
                     targetCadence = Zone(0.0, 0.0),
-                    targetHearthRate = Zone(0.0, 0.0)
+                    targetHearthRate = Zone(0.0, 0.0),
+                    targetPower = Zone(0.0, 0.0)
                 )
             )
             updateLiveData()
@@ -46,5 +48,16 @@ class WorkoutDetailViewModel(
     }
 
     fun addLoopPlaceholder() {
+    }
+
+    fun setWorkoutName(input: String) {
+        workout.value?.let {
+            it.name = input
+            workout.value = it
+        }
+    }
+
+    fun saveWorkout() {
+        workout.value?.let { workoutRepo.save(it) }
     }
 }

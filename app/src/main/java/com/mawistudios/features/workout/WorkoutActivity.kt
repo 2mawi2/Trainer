@@ -9,6 +9,7 @@ import com.mawistudios.app.toast
 import com.mawistudios.features.workout.detail.WorkoutDetailActivity
 import com.mawistudios.trainer.R
 import kotlinx.android.synthetic.main.activity_workout.*
+import kotlinx.android.synthetic.main.activity_workout_detail.*
 import org.koin.android.ext.android.inject
 
 
@@ -37,6 +38,7 @@ class WorkoutActivity : AppCompatActivity() {
         viewModel.workouts.observe(this, Observer { workouts ->
             workoutAdapter.submitList(workouts)
         })
+
 
         if (!::workoutAdapter.isInitialized) {
             workoutAdapter = WorkoutAdapter(

@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.mawistudios.app.toast
 import com.mawistudios.features.interval.detail.IntervalAdapter
+import com.mawistudios.features.workout.detail.interval.IntervalDetailActivity
 import com.mawistudios.features.workout.WorkoutActivity
 import com.mawistudios.trainer.R
 import kotlinx.android.synthetic.main.activity_workout_detail.*
@@ -42,7 +42,8 @@ class WorkoutDetailActivity : AppCompatActivity() {
             workout_name_input.setText(it.name)
         })
         update_workout_btn.setOnClickListener {
-            toast("Workout updated!")
+            viewModel.setWorkoutName(workout_name_input.text.toString())
+            viewModel.saveWorkout()
             startActivity(Intent(this, WorkoutActivity::class.java))
         }
         cancel_btn.setOnClickListener {
@@ -60,10 +61,10 @@ class WorkoutDetailActivity : AppCompatActivity() {
                     viewModel.removeInterval(interval)
                 },
                 onClickModify = { interval ->
-                    toast("TODO")
-                    //val intent = Intent(this, WorkoutDetailActivity::class.java)
-                    //intent.putExtra("workoutId", workout.id)
-                    //startActivity(intent)
+                    val intent = Intent(this, IntervalDetailActivity::class.java)
+                    intent.putExtra("intervalId", interval.id)
+                    intent.putExtra("workoutId", viewModel.workout.value?.id)
+                    startActivity(intent)
                 }
             )
         }
