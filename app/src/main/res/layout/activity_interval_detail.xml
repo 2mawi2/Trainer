@@ -47,7 +47,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:textSize="20sp"
-            tools:text="Select Duration:" />
+            android:text="Select Duration:" />
 
         <TextView
             android:id="@+id/select_duration_value"
@@ -76,7 +76,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:textSize="20sp"
-            tools:text="Select Power Zone:" />
+            android:text="Select Power Zone:" />
 
         <TextView
             android:id="@+id/select_power_value"
@@ -105,7 +105,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:textSize="20sp"
-            tools:text="Select HR Zone:" />
+            android:text="Select HR Zone:" />
 
         <TextView
             android:id="@+id/select_hr_value"

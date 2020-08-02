@@ -19,7 +19,7 @@ data class Workout(
 ) : Serializable {
     @Backlink(to = "workout")
     lateinit var intervals: ToMany<Interval>
-    fun totalDuration(): Duration = Duration.ofMillis(intervals.sumByLong { it.duration })
+    fun totalDuration(): Duration = Duration.ofMillis(intervals.sumByLong { it.duration().toMillis() })
     val formatedCreatedDate: String
         get() = SimpleDateFormat("dd/MM/yyyy", Locale.GERMANY).format(createdDate)
 }

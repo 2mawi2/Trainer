@@ -70,3 +70,11 @@ fun Sensor.resetState(): Sensor {
     state = HardwareConnectorEnums.SensorConnectionState.DISCONNECTED.asString()
     return this
 }
+
+fun secondsToMillis(seconds: Long) = seconds * 1000L
+fun minutesToMillis(minutes: Long) = secondsToMillis(minutes * 60L)
+fun hoursToMillis(hours: Long) = minutesToMillis(hours * 60L)
+
+fun secondsToMillis(seconds: Int): Long = seconds * 1000L
+fun minutesToMillis(minutes: Int): Long = secondsToMillis(minutes * 60)
+fun hoursToMillis(hours: Int): Long = minutesToMillis(hours * 60)

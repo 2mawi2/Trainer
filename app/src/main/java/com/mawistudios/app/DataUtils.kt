@@ -18,7 +18,7 @@ fun Workout.toGraphFormat(): List<List<Pair<Float, Float>>> {
                 intervals[i].targetHearthRate.max.toFloat()
             )
         )
-        totalDuration = totalDuration.plusMillis(intervals[i].duration)
+        totalDuration = totalDuration.plusMillis(intervals[i].duration().toMillis())
         intervalData.add(
             Pair(
                 totalDuration.toMillis().toFloat(),

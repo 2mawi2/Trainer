@@ -60,6 +60,7 @@ dependencies {
     implementation "io.objectbox:objectbox-kotlin:$object_box_version"
     implementation 'com.mysugr.MPAndroidChart:MPAndroidChart:3.1.0-mysugr-1'
     implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
 
     implementation 'com.jjoe64:graphview:4.2.2'
 

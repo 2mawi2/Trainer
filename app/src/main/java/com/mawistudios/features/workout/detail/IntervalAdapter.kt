@@ -32,7 +32,7 @@ class IntervalAdapter(
     ) : RecyclerView.ViewHolder(intervalItem) {
         fun setupView(interval: Interval) {
             itemView.interval_name.text = interval.name
-            itemView.interval_duration.text = "${interval.duration().toMinutes()} min"
+            itemView.interval_duration.text = interval.getFormattedDuration()
             itemView.remove_btn.setOnClickListener { onClickRemove(interval) }
             itemView.modify_btn.setOnClickListener { onClickModify(interval) }
         }

@@ -2,7 +2,10 @@ package com.mawistudios.features.workout.detail.interval
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mawistudios.app.hoursToMillis
+import com.mawistudios.app.minutesToMillis
 import com.mawistudios.app.model.Interval
+import com.mawistudios.app.secondsToMillis
 import com.mawistudios.features.trainer.IIntervalRepo
 
 class IntervalDetailViewModel(
@@ -28,6 +31,15 @@ class IntervalDetailViewModel(
     fun setIntervalName(input: String) {
         interval.value?.let {
             it.name = input
+            interval.value = it
+        }
+    }
+
+    fun setIntervalDuration(hours: Int, minutes: Int, seconds: Int) {
+        interval.value?.let {
+            it.hours = hours
+            it.minutes = minutes
+            it.seconds = seconds
             interval.value = it
         }
     }
