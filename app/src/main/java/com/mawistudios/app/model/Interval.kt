@@ -12,6 +12,7 @@ data class Interval(
     var duration: Long,
     @Transient var targetCadence: Zone,
     @Transient var targetHearthRate: Zone,
+    val name: String = "",
     val start: Long = 0,
     val end: Long = 0,
     val workoutId: Long = 0

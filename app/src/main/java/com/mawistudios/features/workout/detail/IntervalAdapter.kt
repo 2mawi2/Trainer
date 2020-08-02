@@ -31,7 +31,8 @@ class IntervalAdapter(
         private val onClickModify: (Interval) -> Unit
     ) : RecyclerView.ViewHolder(intervalItem) {
         fun setupView(interval: Interval) {
-            itemView.interval_duration.text = interval.duration().toString()
+            itemView.interval_name.text = interval.name
+            itemView.interval_duration.text = "${interval.duration().toMinutes()} min"
             itemView.remove_btn.setOnClickListener { onClickRemove(interval) }
             itemView.modify_btn.setOnClickListener { onClickModify(interval) }
         }

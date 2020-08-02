@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mawistudios.app.model.Zone
 import com.mawistudios.data.local.IPropertyRepo
-import kotlin.math.round
 
 class ZoneViewModel(
     private val zoneRepo: IZoneRepo,
@@ -54,13 +53,14 @@ class ZoneViewModel(
     }
 
     private fun calculatePowerZones(ftp: Double): List<Zone> {
+        val difference = 0.0000001
         return listOf(
-            Zone(name = "ACTIVE RECOVERY", min = round(ftp * 0.0), max = round(ftp * 0.55)),
-            Zone(name = "ENDURANCE", min = round(ftp * 0.56), max = round(ftp * 0.75)),
-            Zone(name = "TEMPO", min = round(ftp * 0.76), max = round(ftp * 0.90)),
-            Zone(name = "LACTATE THRESHOLD", min = round(ftp * 0.91), max = round(ftp * 1.05)),
-            Zone(name = "VO2 MAX", min = round(ftp * 1.06), max = round(ftp * 1.20)),
-            Zone(name = "ANAEROBIC CAPACITY", min = round(ftp * 1.21), max = round(ftp * 1.5))
+            Zone(name = "ACTIVE RECOVERY", min = ftp * 0.0, max = ftp * 0.56 - difference),
+            Zone(name = "ENDURANCE", min = ftp * 0.56, max = ftp * 0.76 - difference),
+            Zone(name = "TEMPO", min = ftp * 0.76, max = ftp * 0.91 - difference),
+            Zone(name = "LACTATE THRESHOLD", min = ftp * 0.91, max = ftp * 1.06 - difference),
+            Zone(name = "VO2 MAX", min = ftp * 1.06, max = ftp * 1.21 - difference),
+            Zone(name = "ANAEROBIC CAPACITY", min = ftp * 1.21, max = ftp * 1.5)
         )
     }
 

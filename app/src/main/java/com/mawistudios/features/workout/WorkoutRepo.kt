@@ -20,26 +20,6 @@ class WorkoutRepo(
     IWorkoutRepo {
     override fun getWorkout(): Workout {
         TODO()
-        //val targetCadence = Zone(70.0, 80.0)
-//
-        //var intervalStart: Long = 0
-        //val hearthRateZones = getUserHearthRateZones()
-        //val intervals =
-        //    (hearthRateZones.take(6) + hearthRateZones.take(6).reversed()).toList().map {
-        //        val duration = Duration.ofSeconds(60).toMillis()
-        //        val intervalEnd = intervalStart + duration
-        //        val interval = TrainingInterval(
-        //            start = intervalStart,
-        //            end = intervalEnd,
-        //            duration = duration,
-        //            targetCadence = targetCadence,
-        //            targetHearthRate = it
-        //        )
-        //        intervalStart = intervalEnd
-        //        interval
-        //    }
-        //intervals.forEach { log(it.toString()) }
-        //return TrainingPlan(intervals = intervals)
     }
 
     override fun addInterval(workoutId: Long, interval: Interval) {

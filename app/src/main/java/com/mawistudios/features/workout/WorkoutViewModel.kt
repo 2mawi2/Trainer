@@ -20,7 +20,7 @@ class WorkoutViewModel(
 
     fun addWorkoutPlaceholder() {
         addWorkout(Workout(
-            name = "Workout ${workouts.value?.count() ?: 1}",
+            name = "Workout ${(workouts.value?.count() ?: 0) + 1}",
             createdDate = Calendar.getInstance().time
         ))
     }

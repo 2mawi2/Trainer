@@ -112,7 +112,7 @@
     },
     {
       "id": "6:4706929609206549867",
-      "lastPropertyId": "5:5842148236919922949",
+      "lastPropertyId": "6:914502528567604862",
       "name": "Interval",
       "properties": [
         {
@@ -146,6 +146,11 @@
           "type": 11,
           "flags": 524,
           "relationTarget": "Workout"
+        },
+        {
+          "id": "6:914502528567604862",
+          "name": "name",
+          "type": 9
         }
       ],
       "relations": []

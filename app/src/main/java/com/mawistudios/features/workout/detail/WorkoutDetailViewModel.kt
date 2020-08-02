@@ -35,6 +35,7 @@ class WorkoutDetailViewModel(
         workoutId?.let {
             workoutRepo.addInterval(
                 it, Interval(
+                    name = "Interval ${(intervals.value?.count() ?: 0) + 1}",
                     duration = 200,
                     targetCadence = Zone(0.0, 0.0),
                     targetHearthRate = Zone(0.0, 0.0)
