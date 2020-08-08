@@ -57,21 +57,28 @@ class IntervalDetailActivity : AppCompatActivity() {
             navigateToWorkoutActivity()
         }
         cancel_btn.setOnClickListener { navigateToWorkoutActivity() }
+        setupDurationPicker()
+        setupSelectPowerSpinner()
+    }
 
+    private fun setupDurationPicker() {
         select_duration_dialog.setOnClickListener {
             val timePickerDialog = getTimePickerDialog()
             timePickerDialog.show()
         }
+    }
 
+    private fun setupSelectPowerSpinner() {
         val zones = viewModel.getUserPowerZones()
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_item, zones.map { "${it.index}: ${it.name}" })
+            android.R.layout.simple_spinner_item,
+            zones.map { "${it.index}: ${it.name}" }
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         select_power_spinner.adapter = adapter
         select_power_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {}
-
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
                 toast("selected: ${zones[position].name}")
             }
