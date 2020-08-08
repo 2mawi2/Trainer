@@ -2,15 +2,17 @@ package com.mawistudios.features.workout.detail.interval
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog
-import com.mawistudios.app.model.Interval
+import com.mawistudios.app.toast
 import com.mawistudios.features.workout.detail.WorkoutDetailActivity
 import com.mawistudios.trainer.R
 import kotlinx.android.synthetic.main.activity_interval_detail.*
 import org.koin.android.ext.android.inject
-import java.lang.StringBuilder
 
 
 class IntervalDetailActivity : AppCompatActivity() {
@@ -57,18 +59,34 @@ class IntervalDetailActivity : AppCompatActivity() {
         cancel_btn.setOnClickListener { navigateToWorkoutActivity() }
 
         select_duration_dialog.setOnClickListener {
-            val mTimePicker = MyTimePickerDialog(
-                this,
-                MyTimePickerDialog.OnTimeSetListener { view, hours, minutes, seconds ->
-                    viewModel.setIntervalDuration(hours, minutes, seconds)
-                },
-                viewModel.interval.value!!.hours,
-                viewModel.interval.value!!.minutes,
-                viewModel.interval.value!!.seconds,
-                true
-            )
-            mTimePicker.show()
+            val timePickerDialog = getTimePickerDialog()
+            timePickerDialog.show()
+        }
+
+        val zones = viewModel.getUserPowerZones()
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item, zones.map { "${it.index}: ${it.name}" })
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        select_power_spinner.adapter = adapter
+        select_power_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
+                toast("selected: ${zones[position].name}")
+            }
         }
     }
+
+    private fun getTimePickerDialog() = MyTimePickerDialog(
+        this,
+        MyTimePickerDialog.OnTimeSetListener { view, hours, minutes, seconds ->
+            viewModel.setIntervalDuration(hours, minutes, seconds)
+        },
+        viewModel.interval.value!!.hours,
+        viewModel.interval.value!!.minutes,
+        viewModel.interval.value!!.seconds,
+        true
+    )
 
 }

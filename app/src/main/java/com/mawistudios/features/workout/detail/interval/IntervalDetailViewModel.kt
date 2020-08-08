@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import com.mawistudios.app.hoursToMillis
 import com.mawistudios.app.minutesToMillis
 import com.mawistudios.app.model.Interval
+import com.mawistudios.app.model.Zone
 import com.mawistudios.app.secondsToMillis
 import com.mawistudios.features.trainer.IIntervalRepo
+import com.mawistudios.features.zone.IZoneRepo
 
 class IntervalDetailViewModel(
+    private val zoneRepo: IZoneRepo,
     private val intervalRepo: IIntervalRepo
 ) : ViewModel() {
     val interval: MutableLiveData<Interval> by lazy { MutableLiveData<Interval>() }
@@ -43,4 +46,6 @@ class IntervalDetailViewModel(
             interval.value = it
         }
     }
+
+    fun getUserPowerZones(): List<Zone> = zoneRepo.all()
 }

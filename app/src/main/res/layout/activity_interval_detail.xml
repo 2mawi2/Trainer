@@ -78,18 +78,19 @@
             android:textSize="20sp"
             android:text="Select Power Zone:" />
 
-        <TextView
-            android:id="@+id/select_power_value"
+        <Spinner
+            android:id="@+id/select_power_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:textSize="20sp"
-            tools:text="Zone 1" />
+            tools:text="Zone 1">
+        </Spinner>
     </LinearLayout>
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:id="@+id/select_hr_zone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,7 +117,7 @@
             android:layout_marginBottom="20dp"
             android:textSize="20sp"
             tools:text="Zone 1" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/footer"

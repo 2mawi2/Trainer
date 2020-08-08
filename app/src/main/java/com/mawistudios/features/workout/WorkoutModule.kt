@@ -11,6 +11,6 @@ val workoutModule = module {
     single { WorkoutRepo(get()) as IWorkoutRepo }
     viewModel { TrainerViewModel(get(), get(), get(), get(), get()) }
     viewModel { WorkoutViewModel(get()) }
-    viewModel { IntervalDetailViewModel(get()) }
+    viewModel { IntervalDetailViewModel(get(), get()) }
     viewModel { WorkoutDetailViewModel(get()) }
 }
